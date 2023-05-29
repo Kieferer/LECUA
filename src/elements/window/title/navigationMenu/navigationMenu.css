@@ -1,0 +1,23 @@
+.titlebar-button {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 30px;
+  height: 100%;
+  flex-wrap: wrap;
+}
+.titlebar-button:hover {
+  background: #181818;
+  color: #ffffff;
+}
+
+.titlebar-navigationbar {
+  display: flex;
+  flex-direction: row;
+  background-color: #3b3b3b;
+  border-radius: 8px;
+  align-content: center;
+  flex-wrap: wrap;
+  overflow: clip;
+  margin-right: 5px;
+}
