@@ -1,0 +1,51 @@
+.titlebar {
+  display: flex;
+  height: 45px;
+  background-color: #2f2f2f;
+  user-select: none;
+  flex-direction: row;
+  position: fixed;
+  justify-content: space-between;
+  align-content: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  flex-wrap: wrap;
+  z-index: 9999;
+}
+
+.titlebar-menu {
+  display: inline-flex;
+  flex-wrap: wrap;
+  background-color: #3b3b3b;
+  border-radius: 8px;
+  align-content: center;
+  height: fit-content;
+  width: fit-content;
+  margin-left: 5px;
+}
+
+.titleName {
+  position: fixed;
+  right: 50%;
+  left: 50%;
+  top: 11px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.titlebar-left {
+  display: flex;
+}
+
+.logoApp {
+  width: 20px;
+  height: 20px;
+  margin: 7.5px;
+  will-change: filter;
+  transition: 0.75s;
+}
+
+.logoApp:hover {
+  filter: drop-shadow(0 0 20px #ffffff);
+}
