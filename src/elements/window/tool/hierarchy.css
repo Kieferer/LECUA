@@ -1,0 +1,25 @@
+.hierarchyTitle {
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.hierarchyPanel {
+  left: 0;
+  bottom: 0;
+  top: 45px;
+  width: 200px;
+  background-color: #181818;
+  border: medium solid #0f0f0f;
+  overflow: clip;
+  position: fixed;
+}
+
+.hierarchyPanel::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 45px;
+  width: 10px;
+  cursor: col-resize;
+}
