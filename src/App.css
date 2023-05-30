@@ -8,4 +8,11 @@
 
 .container {
   background-color: #181818;
+  overflow: clip;
+}
+
+.ver {
+  display: inline-grid;
+  grid-row: auto;
+  grid-column: 2;
 }
