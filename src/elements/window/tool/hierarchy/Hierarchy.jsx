@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import './hierarchy.css'
-import {useEffect} from "react";
 const Hierarchy = () => {
   useEffect(() => {
     const resizableDiv = document.getElementById('myResizableDiv');
@@ -8,10 +8,7 @@ const Hierarchy = () => {
 
     const handleMouseDown = (event) => {
       startX = event.clientX;
-      startWidth = parseInt(
-        document.defaultView.getComputedStyle(resizableDiv).width,
-        10
-      );
+      startWidth = parseInt(document.defaultView.getComputedStyle(resizableDiv).width, 10);
 
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
@@ -39,6 +36,6 @@ const Hierarchy = () => {
       <p className={"hierarchyTitle"}>HIERARCHY</p>
     </div>
   )
-}
+};
 
 export default Hierarchy;
