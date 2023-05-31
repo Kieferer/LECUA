@@ -7,8 +7,8 @@ import './codeEditor.css'
 
 
 const CodeEditor = () => {
-  const [cursorPosX, setCursorPosX] = useState(0);
-  const [cursorPosY, setCursorPosY] = useState(0);
+  const [cursorPosX, setCursorPosX] = useState(1);
+  const [cursorPosY, setCursorPosY] = useState(1);
   const [code, setCode] = useState('');
   const [visualizerCode, setVisualizerCode] = useState('')
   const editorRef = useRef(null);
