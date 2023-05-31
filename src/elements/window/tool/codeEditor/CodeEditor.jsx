@@ -14,7 +14,8 @@ const CodeEditor = () => {
   const editorRef = useRef(null);
 
   useEffect(() => {
-    invoke('insert_cursor_symbol', { text: code, x: Math.min(cursorPosX, code.length), y: cursorPosY }).then((message => {setVisualizerCode(message); Prism.highlightAll();}));
+    invoke('insert_cursor_symbol', { text: code, x: Math.min(cursorPosX, code.length), y: cursorPosY }).then((message => {setVisualizerCode(message);}));
+    setTimeout(Prism.highlightAll, 1);
   }, [cursorPosX, cursorPosY]);
 
   useEffect(() => {
@@ -59,11 +60,6 @@ const CodeEditor = () => {
   return (
     <div className={"editorPanel"}>
       <pre className="language-javascript" ref={editorRef} id={"editor"}>
-        <code className="language-javascript">
-          {code}
-        </code>
-      </pre>
-      <pre className="language-javascript">
         <code className="language-javascript">
           {visualizerCode}
         </code>
