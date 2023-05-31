@@ -11,28 +11,20 @@ const CodeEditor = () => {
   const [cursorPosY, setCursorPosY] = useState(0);
   const [code, setCode] = useState('');
   const [visualizerCode, setVisualizerCode] = useState('')
-  const handleChange = (event) => {
-    setCode(event.target.value);
-  };
+  const editorRef = useRef(null);
 
   useEffect(() => {
-    setVisualizerCode(code);
-    invoke('insert_cursor_symbol', { text: code, x: Math.min(cursorPosX, code.length), y: cursorPosY }).then((message => setVisualizerCode(message)));
-    Prism.highlightAll();
-  }, [code, cursorPosX, cursorPosY]);
-
-  const textareaRef = useRef(null);
+    invoke('insert_cursor_symbol', { text: code, x: Math.min(cursorPosX, code.length), y: cursorPosY }).then((message => {setVisualizerCode(message); Prism.highlightAll();}));
+  }, [cursorPosX, cursorPosY]);
 
   useEffect(() => {
-
     document.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
   const handleKeyDown = (event) => {
-    if (event.target.id === textareaRef.current.id) {
+    if (event.target.id === editorRef.current.id) {
       if (event.key === "ArrowRight") {
         setCursorPosX((value) => value + 1);
       }
@@ -66,11 +58,16 @@ const CodeEditor = () => {
 
   return (
     <div className={"editorPanel"}>
-      <pre className="language-javascript" ref={textareaRef} id={"field"}>
+      <pre className="language-javascript" ref={editorRef} id={"editor"}>
+        <code className="language-javascript">
+          {code}
+        </code>
+      </pre>
+      <pre className="language-javascript">
         <code className="language-javascript">
           {visualizerCode}
         </code>
-    </pre>
+      </pre>
     </div>
   )};
 export default CodeEditor;
