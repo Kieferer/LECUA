@@ -5,7 +5,7 @@ pub fn insert_cursor_symbol(mut text: String, x: usize, y: usize) -> String {
 }
 
 #[tauri::command]
-pub fn insert_text_at_cursor(text: String, inserted_text: String, x: usize, y: usize) -> String {
-    let a = (x + y).to_string();
-    a
+pub fn insert_text_at_cursor(mut text: String, inserted_text: String, x: usize, y: usize) -> String {
+    text = (x + y).to_string();
+    text
 }
