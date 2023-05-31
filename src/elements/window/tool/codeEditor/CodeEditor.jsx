@@ -1,22 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Prism from 'prismjs';
 import '../../../../../public/css/prism-synthwave84.css';
+import 'prismjs/components/prism-javascript';
+import { invoke } from '@tauri-apps/api/tauri';
 import './codeEditor.css'
 
-import 'prismjs/components/prism-javascript';
 
 const CodeEditor = () => {
   const [cursorPosX, setCursorPosX] = useState(0);
   const [cursorPosY, setCursorPosY] = useState(0);
   const [code, setCode] = useState('');
-
+  const [visualizerCode, setVisualizerCode] = useState('')
   const handleChange = (event) => {
     setCode(event.target.value);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setVisualizerCode(code);
+    invoke('insert_cursor_symbol', { text: code, x: Math.min(cursorPosX, code.length), y: cursorPosY }).then((message => setVisualizerCode(message)));
     Prism.highlightAll();
-  }, [code]);
+  }, [code, cursorPosX, cursorPosY]);
 
   const textareaRef = useRef(null);
 
@@ -30,12 +33,21 @@ const CodeEditor = () => {
   }, []);
   const handleKeyDown = (event) => {
     if (event.target.id === textareaRef.current.id) {
-      console.log(event)
-
-      //if (event.key === "ArrowRight")
-
+      if (event.key === "ArrowRight") {
+        setCursorPosX((value) => value + 1);
+      }
+      if (event.key === "ArrowLeft") {
+        setCursorPosX((value) => value - 1);
+      }
+      if (event.key === "ArrowUp") {
+        setCursorPosY((value) => value + 1);
+      }
+      if (event.key === "ArrowDown") {
+        setCursorPosY((value) => value - 1);
+      }
       if (event.key === "Backspace") {
         setCode((prevText) => prevText.slice(0, -1));
+        setCursorPosX((value) => value - 1);
         return;
       }
 
@@ -46,9 +58,9 @@ const CodeEditor = () => {
       if (event.ctrlKey) {
         return;
       }
-
       if (event.key.length < 2){
         setCode((prevText) => prevText + event.key);
+        setCursorPosX((value) => value + 1);
       }
     }};
 
@@ -56,7 +68,7 @@ const CodeEditor = () => {
     <div className={"editorPanel"}>
       <pre className="language-javascript" ref={textareaRef} id={"field"}>
         <code className="language-javascript">
-          {code}
+          {visualizerCode}
         </code>
     </pre>
     </div>
