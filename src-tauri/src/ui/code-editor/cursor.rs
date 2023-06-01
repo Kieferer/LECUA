@@ -1,6 +1,8 @@
+use std::cmp;
+
 #[tauri::command]
-pub fn insert_cursor_symbol(mut text: String, x: usize, y: usize) -> String {
-    text.insert(x, '┃');
+pub fn insert_cursor_symbol(mut text: String, pos: usize,) -> String {
+    text.insert(cmp::min(text.len(), pos), '┃');
     text
 }
 
