@@ -16,7 +16,6 @@ const CodeEditor = () => {
   const handleKeyDown = (event) => {
     if (event.target.id === editorRef.current.id) {
       if (event.key === "ArrowRight") {
-        console.log(code.length)
         setCursorPosX((value) => Math.min(code.length, value + 1));
       }
       if (event.key === "ArrowLeft") {
@@ -24,9 +23,11 @@ const CodeEditor = () => {
       }
       if (event.key === "ArrowUp") {
         setCursorPosY((value) => Math.min(1, value - 1));
+        invoke('get_length_of_lines', {text: code, y: cursorPosY}).then(y_length => setCursorPosX((value) => value - y_length));
       }
       if (event.key === "ArrowDown") {
         setCursorPosY((value) => Math.max(code.length, value + 1));
+        invoke('get_length_of_lines', {text: code, y: cursorPosY}).then(y_length => setCursorPosX((value) => value + y_length));
       }
       if (event.key === "Backspace") {
         setCode((prevText) => prevText.slice(0, -1));
@@ -49,7 +50,7 @@ const CodeEditor = () => {
   };
 
   useEffect(() => {
-    invoke('insert_cursor_symbol', {text: code, x: cursorPosX, y: cursorPosY}).then((message => {
+    invoke('insert_cursor_symbol', {text: code, pos: cursorPosX}).then((message => {
       setVisualizerCode(message);
     }));
     setCursorPosX((value) => Math.min(code.length, value));
