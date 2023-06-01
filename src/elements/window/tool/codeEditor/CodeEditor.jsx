@@ -23,10 +23,10 @@ const CodeEditor = () => {
         setCursorPosX((value) => Math.max(0, value - 1));
       }
       if (event.key === "ArrowUp") {
-        setCursorPosY((value) => Math.min(1, value + 1));
+        setCursorPosY((value) => Math.min(1, value - 1));
       }
       if (event.key === "ArrowDown") {
-        setCursorPosY((value) => Math.max(code.length, value - 1));
+        setCursorPosY((value) => Math.max(code.length, value + 1));
       }
       if (event.key === "Backspace") {
         setCode((prevText) => prevText.slice(0, -1));
