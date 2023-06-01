@@ -22,21 +22,23 @@ const CodeEditor = () => {
         setCursorPosX((value) => Math.max(0, value - 1));
       }
       if (event.key === "ArrowUp") {
-        setCursorPosY((value) => Math.min(1, value - 1));
+        setCursorPosY((value) => Math.max(1, value - 1));
         invoke('get_length_of_lines', {text: code, y: cursorPosY}).then(y_length => setCursorPosX((value) => value - y_length));
       }
       if (event.key === "ArrowDown") {
-        setCursorPosY((value) => Math.max(code.length, value + 1));
+        setCursorPosY((value) => Math.min(code.length, value + 1));
         invoke('get_length_of_lines', {text: code, y: cursorPosY}).then(y_length => setCursorPosX((value) => value + y_length));
       }
       if (event.key === "Backspace") {
         setCode((prevText) => prevText.slice(0, -1));
         setCursorPosX((value) => Math.max(0, value - 1));
+        setCursorPosY((value) => Math.min(code.length, value + 1));
         return;
       }
 
       if (event.key === "Enter") {
         setCode((prevText) => prevText + "\n");
+        setCursorPosX((value) => value + 1);
       }
 
       if (event.ctrlKey) {
@@ -50,7 +52,7 @@ const CodeEditor = () => {
   };
 
   useEffect(() => {
-    invoke('insert_cursor_symbol', {text: code, pos: cursorPosX}).then((message => {
+    invoke('insert_cursor_symbol', {text: code, pos: Math.min(code.length, cursorPosX)}).then((message => {
       setVisualizerCode(message);
     }));
     setCursorPosX((value) => Math.min(code.length, value));
