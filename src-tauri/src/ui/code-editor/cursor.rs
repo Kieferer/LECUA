@@ -25,7 +25,7 @@ pub fn get_length_of_lines(text: String, y: usize) -> usize {
     y_length
 }
 #[tauri::command]
-pub fn increment_cursor_y(text: String, y: usize, direction: i8) -> String {
+pub fn adjust_cursor_y(text: String, y: usize, direction: i8) -> String {
     get_lines(&text, y).join("")
 }
 
