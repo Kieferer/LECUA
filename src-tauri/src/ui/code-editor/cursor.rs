@@ -40,5 +40,6 @@ pub fn adjust_cursor_y(text: String, mut y: usize, direction: i8) -> usize {
 }
 
 fn get_lines(text: &str, y: usize) -> Vec<&str> {
-    text.lines().take(y).collect()
+    let amount: usize = y + 1;
+    text.lines().take(amount).collect()
 }
