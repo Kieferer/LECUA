@@ -41,9 +41,11 @@ pub fn adjust_cursor_y(text: String, mut y: usize, direction: i8) -> usize {
 
 #[tauri::command]
 pub fn adjust_cursor_x(text: String, mut x: usize, mut y: usize, direction: i8) -> (usize, usize) {
+    println!("{}x:{}y", (x), y);
     let current_row: Option<&str> = text.lines().take(y).collect::<Vec<&str>>().get(0).cloned();
 
     if let Some(row) = current_row {
+        println!("lefut");
         if direction > 0 {
             if  current_row.unwrap().len() >= (x + 1) {
                 x += 1;
