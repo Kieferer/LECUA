@@ -1,15 +1,20 @@
-// Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+#[path = "./utility/math.rs"]
+mod math;
+#[path = "./ui/code-editor/cursor.rs"]
+mod cursor;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![
+            cursor::insert_cursor_symbol,
+            cursor::insert_text_at_cursor,
+            cursor::adjust_cursor_y,
+            cursor::adjust_cursor_x,
+            cursor::get_length_of_lines,
+            math::clamp
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
