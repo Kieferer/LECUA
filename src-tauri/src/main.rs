@@ -11,6 +11,7 @@ fn main() {
             cursor::insert_cursor_symbol,
             cursor::insert_text_at_cursor,
             cursor::adjust_cursor_y,
+            cursor::adjust_cursor_x,
             cursor::get_length_of_lines,
             math::clamp
         ])
