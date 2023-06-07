@@ -48,7 +48,9 @@ const CodeEditor = () => {
       }
 
       if (event.ctrlKey) {
-        invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
+        if (event.key === "t")
+          invoke("compile", {code: code});
+        //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
         return;
       }
       if (event.key.length < 2) {
