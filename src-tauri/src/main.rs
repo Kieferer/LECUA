@@ -2,6 +2,8 @@
 
 #[path = "./utility/math.rs"]
 mod math;
+#[path = "./utility/compiler.rs"]
+mod compiler;
 #[path = "./ui/code-editor/cursor.rs"]
 mod cursor;
 
@@ -13,6 +15,7 @@ fn main() {
             cursor::adjust_cursor_y,
             cursor::adjust_cursor_x,
             cursor::get_length_of_lines,
+            compiler::compile,
             math::clamp
         ])
         .run(tauri::generate_context!())
