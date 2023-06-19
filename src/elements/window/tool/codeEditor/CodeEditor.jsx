@@ -53,6 +53,18 @@ const CodeEditor = () => {
         //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
         return;
       }
+      if (event.altKey) {
+        if (code.includes("main.")){
+          if (event.key === "s") {
+            let codeWithoutSpreadKeyWord = code.replace("main.", "");
+            setCode(codeWithoutSpreadKeyWord + 
+              "pub fn main() {\n" +
+              "    println!(\"Hello, World!\");\n" +
+              "}")
+          }
+        }
+        return;
+      }
       if (event.key.length < 2) {
         setCode((prevText) => prevText + event.key);
         setCursorPos((value) => value + 1);
@@ -66,7 +78,7 @@ const CodeEditor = () => {
     }));
     setCursorPos((value) => Math.min(code.length, value));
     setTimeout(Prism.highlightAll, 1);
-  }, [visualizerCode, cursorPos]);
+  }, [visualizerCode, cursorPos, code]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
