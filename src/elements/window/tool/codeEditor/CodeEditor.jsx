@@ -54,8 +54,8 @@ const CodeEditor = () => {
         return;
       }
       if (event.altKey) {
-        if (code.includes("main.")){
-          if (event.key === "s") {
+        if (event.key === "s") {
+          if (code.includes("main.")){
             let codeWithoutSpreadKeyWord = code.replace("main.", "");
             setCode(codeWithoutSpreadKeyWord + 
               "pub fn main() {\n" +
