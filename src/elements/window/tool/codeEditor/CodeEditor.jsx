@@ -4,6 +4,7 @@ import '../../../../../public/css/prism-synthwave84.css';
 import 'prismjs/components/prism-javascript';
 import {invoke} from '@tauri-apps/api/tauri';
 import './codeEditor.css'
+import Terminal from '../terminal/Terminal';
 
 
 const CodeEditor = () => {
@@ -13,6 +14,7 @@ const CodeEditor = () => {
   const [code, setCode] = useState('');
   const [visualizerCode, setVisualizerCode] = useState('')
   const editorRef = useRef(null);
+  const [outputLog, setOutputLog] = useState("");
 
   const handleKeyDown = (event) => {
     if (event.target.id === editorRef.current.id) {
@@ -49,7 +51,7 @@ const CodeEditor = () => {
 
       if (event.ctrlKey) {
         if (event.key === "t")
-          invoke("compile", {code: code});
+        invoke("compile", {code: code}).then(output => setOutputLog(output));
         //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
         return;
       }
@@ -71,7 +73,6 @@ const CodeEditor = () => {
       }
     }
   };
-
   useEffect(() => {
     invoke('insert_cursor_symbol', {text: code, pos: Math.min(code.length, cursorPos)}).then((message => {
       setVisualizerCode(message);
@@ -94,6 +95,7 @@ const CodeEditor = () => {
           {visualizerCode}
         </code>
       </pre>
+      <Terminal output={outputLog}/>
     </div>
   )
 };
