@@ -1,0 +1,7 @@
+.terminal {
+  background-color: aqua;
+  position: absolute;
+  transform: translate(300px, 300px);
+  height: 300px;
+  width: 300px;
+}
