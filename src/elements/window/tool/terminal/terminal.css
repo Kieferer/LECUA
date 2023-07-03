@@ -1,7 +1,10 @@
 .terminal {
-  background-color: aqua;
+  background-color: #181818;
+  border: medium solid #0f0f0f;
+  overflow: clip;
   position: absolute;
-  transform: translate(300px, 300px);
-  height: 300px;
-  width: 300px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
 }
