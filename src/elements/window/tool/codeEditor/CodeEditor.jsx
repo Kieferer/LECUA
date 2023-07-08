@@ -55,19 +55,23 @@ const CodeEditor = () => {
         //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
         return;
       }
+
       if (event.altKey) {
-        if (event.key === "s") {
-          if (code.includes("main.")){
-            let codeWithoutSpreadKeyWord = code.replace("main.", "");
-            setCode(codeWithoutSpreadKeyWord + 
-              "pub fn main() {\n" +
-              "    println!(\"Hello, World!\");\n" +
-              "}")
-          }
-        } else if (event.key == "c") {
-          setCode("");
+        switch (event.key) {
+          case "s":
+            if (code.includes("main.")){
+              let codeWithoutSpreadKeyWord = code.replace("main.", "");
+              setCode(codeWithoutSpreadKeyWord + 
+                "pub fn main() {\n" +
+                "    println!(\"Hello, World!\");\n" +
+                "}");
+              }
+            return;
+          
+          case "c":
+            setCode("");
+            return;
         }
-        return;
       }
       if (event.key.length < 2) {
         setCode((prevText) => prevText + event.key);
