@@ -64,6 +64,8 @@ const CodeEditor = () => {
               "    println!(\"Hello, World!\");\n" +
               "}")
           }
+        } else if (event.key == "c") {
+          setCode("");
         }
         return;
       }
