@@ -5,14 +5,9 @@ use tempfile::NamedTempFile;
 use std::process::{Command, ExitStatus, Stdio};
 use tauri::Error;
 
-#[derive(Clone, serde::Serialize)]
-struct Payload {
-    message: String,
-}
-
 #[tauri::command]
 pub fn compile(code: String) -> String {
-    let mut file = tempfile::NamedTempFile::new().expect("Failed to create temporary file");
+    let mut file = NamedTempFile::new().expect("Failed to create temporary file");
     let mut output_log: String = String::new();
 
     file.write_all(code.as_bytes())
