@@ -6,6 +6,8 @@ mod math;
 mod compiler;
 #[path = "./ui/code-editor/cursor.rs"]
 mod cursor;
+#[path = "./utility/file.rs"]
+mod file;
 
 fn main() {
     tauri::Builder::default()
@@ -16,7 +18,8 @@ fn main() {
             cursor::adjust_cursor_x,
             cursor::get_length_of_lines,
             compiler::compile,
-            math::clamp
+            math::clamp,
+            file::get_file_system_representation
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
