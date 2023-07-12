@@ -10,7 +10,7 @@ function Folder({ name, children }) {
     <div>
       <div className='folderElement' onClick={handleClick}>
         {
-          visable ? <img className='icon' placeholder='opened' src='./open.png'/> :
+          visable ? <img className='icon' placeholder='opened' src='./opened.png'/> :
           <img className='icon' placeholder='closed' src='./closed.png'/>
         }
         {name}
