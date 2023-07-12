@@ -1,39 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {invoke} from '@tauri-apps/api/tauri';
+import Folder from "./Folder";
 import './hierarchy.css'
+
 const Hierarchy = () => {
+  const [isUpdated, setUpdated] = useState(false);
+  const [data, setData] = useState();
   useEffect(() => {
-    const resizableDiv = document.getElementById('myResizableDiv');
-    let startX;
-    let startWidth;
-
-    const handleMouseDown = (event) => {
-      startX = event.clientX;
-      startWidth = parseInt(document.defaultView.getComputedStyle(resizableDiv).width, 10);
-
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    };
-
-    const handleMouseMove = (event) => {
-      const width = startWidth + (event.clientX - startX);
-      resizableDiv.style.width = `${width}px`;
-    };
-
-    const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    resizableDiv.addEventListener('mousedown', handleMouseDown);
-
-    return () => {
-      resizableDiv.removeEventListener('mousedown', handleMouseDown);
-    };
-  }, []);
+    invoke("get_file_system_representation", {origin: "D:\\SimCity"}).then(x => setData(JSON.parse(x), console.log(x)));
+    setUpdated(false);
+  }, [isUpdated])
 
   return (
-    <div className={"hierarchyPanel"} id="myResizableDiv">
-      <p className={"hierarchyTitle"}>HIERARCHY</p>
+    <div className={"hierarchyPanel"}>
+      {data && <Folder name={data.name} children={data.children}/>}
     </div>
   )
 };

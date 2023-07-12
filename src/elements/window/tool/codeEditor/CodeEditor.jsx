@@ -4,6 +4,7 @@ import '../../../../../public/css/prism-synthwave84.css';
 import 'prismjs/components/prism-javascript';
 import {invoke} from '@tauri-apps/api/tauri';
 import './codeEditor.css'
+import Terminal from '../terminal/Terminal';
 
 
 const CodeEditor = () => {
@@ -13,6 +14,7 @@ const CodeEditor = () => {
   const [code, setCode] = useState('');
   const [visualizerCode, setVisualizerCode] = useState('')
   const editorRef = useRef(null);
+  const [outputLog, setOutputLog] = useState("");
 
   const handleKeyDown = (event) => {
     if (event.target.id === editorRef.current.id) {
@@ -49,9 +51,27 @@ const CodeEditor = () => {
 
       if (event.ctrlKey) {
         if (event.key === "t")
-          invoke("compile", {code: code});
+        invoke("compile", {code: code}).then(output => setOutputLog(output));
         //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
         return;
+      }
+
+      if (event.altKey) {
+        switch (event.key) {
+          case "s":
+            if (code.includes("main.")){
+              let codeWithoutSpreadKeyWord = code.replace("main.", "");
+              setCode(codeWithoutSpreadKeyWord + 
+                "pub fn main() {\n" +
+                "    println!(\"Hello, World!\");\n" +
+                "}");
+              }
+            return;
+          
+          case "c":
+            setCode("");
+            return;
+        }
       }
       if (event.key.length < 2) {
         setCode((prevText) => prevText + event.key);
@@ -59,14 +79,13 @@ const CodeEditor = () => {
       }
     }
   };
-
   useEffect(() => {
     invoke('insert_cursor_symbol', {text: code, pos: Math.min(code.length, cursorPos)}).then((message => {
       setVisualizerCode(message);
     }));
     setCursorPos((value) => Math.min(code.length, value));
     setTimeout(Prism.highlightAll, 1);
-  }, [visualizerCode, cursorPos]);
+  }, [visualizerCode, cursorPos, code]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -82,6 +101,7 @@ const CodeEditor = () => {
           {visualizerCode}
         </code>
       </pre>
+      <Terminal output={outputLog}/>
     </div>
   )
 };
