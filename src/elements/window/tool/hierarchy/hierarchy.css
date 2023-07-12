@@ -38,3 +38,9 @@
   font-size: 12px;
   font-weight: lighter;
 }
+
+.icon {
+  transform: translate(0, 6px);
+  width: 25px;
+  height: 25px;
+}
