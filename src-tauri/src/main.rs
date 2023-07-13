@@ -19,7 +19,8 @@ fn main() {
             cursor::get_length_of_lines,
             compiler::compile,
             math::clamp,
-            file::get_file_system_representation
+            file::get_file_system_representation,
+            file::load_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
