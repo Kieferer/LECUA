@@ -32,15 +32,17 @@
 .folderElement {
   font-size: 14px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .fileElement {
   font-size: 12px;
   font-weight: lighter;
+  cursor: pointer;
 }
 
 .icon {
-  transform: translate(0, 6px);
+  transform: translate(-2px, 8px);
   width: 25px;
   height: 25px;
 }
