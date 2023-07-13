@@ -6,7 +6,14 @@ use serde_json;
 #[derive(Serialize)]
 struct FileSystemNode {
     name: String,
+    path: String,
     children: Option<Vec<FileSystemNode>>,
+}
+
+#[tauri::command]
+pub fn load_file(path: String) -> String {
+    let file_data = fs::read_to_string(path);
+    file_data.unwrap()
 }
 
 #[tauri::command]
@@ -33,6 +40,7 @@ fn build_file_system_tree(folder_path: &Path) -> FileSystemNode {
                     let file_name = entry.file_name().to_string_lossy().to_string();
                     let child_node = FileSystemNode {
                         name: file_name,
+                        path: entry.path().to_string_lossy().to_string(),
                         children: None,
                     };
                     children.push(child_node);
@@ -43,6 +51,7 @@ fn build_file_system_tree(folder_path: &Path) -> FileSystemNode {
 
     FileSystemNode {
         name: folder_name,
+        path: folder_path.to_string_lossy().to_string(),
         children: Some(children),
     }
 }

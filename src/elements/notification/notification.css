@@ -1,0 +1,11 @@
+.notificationBox {
+  width: 100%;
+  height: 40px;
+  background-color: brown;
+  position: absolute;
+  display: flex;
+  left: 0;
+  top: 45px;
+  justify-content: center;
+  align-content: center;
+}

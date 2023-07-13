@@ -7,7 +7,7 @@ import './codeEditor.css'
 import Terminal from '../terminal/Terminal';
 
 
-const CodeEditor = () => {
+const CodeEditor = ({updatedCode}) => {
   const [cursorPos, setCursorPos] = useState(0);
   const [cursorPosX, setCursorPosX] = useState(0);
   const [cursorPosY, setCursorPosY] = useState(0);
@@ -79,6 +79,13 @@ const CodeEditor = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (updatedCode) {
+      setCode(updatedCode);
+    }
+  }, [updatedCode]);
+
   useEffect(() => {
     invoke('insert_cursor_symbol', {text: code, pos: Math.min(code.length, cursorPos)}).then((message => {
       setVisualizerCode(message);
