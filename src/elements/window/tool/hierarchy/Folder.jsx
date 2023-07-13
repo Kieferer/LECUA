@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import File from './File';
 
-function Folder({ name, children }) {
+function Folder({ name, path, children, loadFile }) {
   const [visable, setVisable] = useState(true);
   const handleClick = () => {
     setVisable(!visable);
@@ -16,8 +16,9 @@ function Folder({ name, children }) {
         {name}
       </div>
       {visable && <ul>
-        {children && children.map((element, id) => element.children ? <Folder key={id} name={element.name} children={element.children} /> :
-          <File key={id} name={element.name} />)}
+        {children && children.map((element, id) => element.children ?
+          <Folder key={id} name={element.name} children={element.children} path={element.path} loadFile={loadFile} /> :
+          <File key={id} name={element.name} path={element.path} loadFile={loadFile} />)}
       </ul>
       }
     </div>
