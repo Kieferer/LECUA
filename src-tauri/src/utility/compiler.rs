@@ -3,10 +3,12 @@ use std::env::temp_dir;
 use std::io::Write;
 use tempfile::NamedTempFile;
 use std::process::{Command, ExitStatus, Stdio};
+use tauri::Error;
 
 #[tauri::command]
-pub fn compile(code: String) {
-    let mut file = tempfile::NamedTempFile::new().expect("Failed to create temporary file");
+pub fn compile(code: String) -> String {
+    let mut file = NamedTempFile::new().expect("Failed to create temporary file");
+    let mut output_log: String = String::new();
 
     file.write_all(code.as_bytes())
         .expect("Failed to write to file");
@@ -25,7 +27,7 @@ pub fn compile(code: String) {
 
     if !output.status.success() {
         let error_string = std::str::from_utf8(&output.stderr).expect("Failed to convert error output to string");
-        println!("Compile error: {}", error_string);
+        output_log = "Compile error:".to_string() + &error_string.to_string();
     } else {
         let run_output = Command::new(directory_path + "/filename.exe")
             .output();
@@ -34,17 +36,18 @@ pub fn compile(code: String) {
             Ok(output) => {
                 if !output.status.success() {
                     let error_string = std::str::from_utf8(&output.stderr).expect("Failed to convert error output to string");
-                    println!("Run error: {}", error_string);
+                    output_log = "Run error: ".to_string() + &error_string.to_string();
                 } else {
                     let output_string = std::str::from_utf8(&output.stdout).expect("Failed to convert output to string");
-                    println!("{}", output_string);
+                    output_log = output_string.to_string();
                 }
             }
             Err(err) => {
-                println!("Failed to execute run command: {}", err);
+                output_log = err.to_string();
             }
         }
     }
 
-    println!("status: {}", output.status);
+    output_log += &*output.status.to_string();
+    output_log
 }

@@ -14,7 +14,7 @@ const TitleBar = () => {
     <div data-tauri-drag-region className="titlebar" id={"titlebar"}>
       <div className={"titlebar-left"}>
         <div className="titlebar-menu">
-          <img src="/vite.svg" className="logoApp" alt="Vite logo" />
+          <img src="/lecuaLogo.png" className="logoApp" alt="Vite logo" />
         </div>
         <div className="titlebar-menu">
             <Button label={"File"}/>

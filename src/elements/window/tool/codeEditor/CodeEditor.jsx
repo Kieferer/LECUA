@@ -4,15 +4,17 @@ import '../../../../../public/css/prism-synthwave84.css';
 import 'prismjs/components/prism-javascript';
 import {invoke} from '@tauri-apps/api/tauri';
 import './codeEditor.css'
+import Terminal from '../terminal/Terminal';
 
 
-const CodeEditor = () => {
+const CodeEditor = ({updatedCode}) => {
   const [cursorPos, setCursorPos] = useState(0);
   const [cursorPosX, setCursorPosX] = useState(0);
   const [cursorPosY, setCursorPosY] = useState(0);
   const [code, setCode] = useState('');
   const [visualizerCode, setVisualizerCode] = useState('')
   const editorRef = useRef(null);
+  const [outputLog, setOutputLog] = useState("");
 
   const handleKeyDown = (event) => {
     if (event.target.id === editorRef.current.id) {
@@ -49,21 +51,27 @@ const CodeEditor = () => {
 
       if (event.ctrlKey) {
         if (event.key === "t")
-          invoke("compile", {code: code});
+        invoke("compile", {code: code}).then(output => setOutputLog(output));
         //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
         return;
       }
+
       if (event.altKey) {
-        if (code.includes("main.")){
-          if (event.key === "s") {
-            let codeWithoutSpreadKeyWord = code.replace("main.", "");
-            setCode(codeWithoutSpreadKeyWord + 
-              "pub fn main() {\n" +
-              "    println!(\"Hello, World!\");\n" +
-              "}")
-          }
+        switch (event.key) {
+          case "s":
+            if (code.includes("main.")){
+              let codeWithoutSpreadKeyWord = code.replace("main.", "");
+              setCode(codeWithoutSpreadKeyWord + 
+                "pub fn main() {\n" +
+                "    println!(\"Hello, World!\");\n" +
+                "}");
+              }
+            return;
+          
+          case "c":
+            setCode("");
+            return;
         }
-        return;
       }
       if (event.key.length < 2) {
         setCode((prevText) => prevText + event.key);
@@ -71,6 +79,12 @@ const CodeEditor = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (updatedCode) {
+      setCode(updatedCode);
+    }
+  }, [updatedCode]);
 
   useEffect(() => {
     invoke('insert_cursor_symbol', {text: code, pos: Math.min(code.length, cursorPos)}).then((message => {
@@ -94,6 +108,7 @@ const CodeEditor = () => {
           {visualizerCode}
         </code>
       </pre>
+      <Terminal output={outputLog}/>
     </div>
   )
 };

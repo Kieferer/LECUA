@@ -8,19 +8,41 @@
   left: 0;
   bottom: 0;
   top: 45px;
-  width: 200px;
+  width: 270px;
   background-color: #181818;
   border: medium solid #0f0f0f;
-  overflow: clip;
-  position: fixed;
+  overflow: scroll;
+  position: absolute;
 }
 
-.hierarchyPanel::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  top: 45px;
+.hierarchyPanel::-webkit-scrollbar {
   width: 10px;
-  cursor: col-resize;
+  height: 10px;
+}
+
+.hierarchyPanel::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+.hierarchyPanel::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+}
+
+.folderElement {
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.fileElement {
+  font-size: 12px;
+  font-weight: lighter;
+  cursor: pointer;
+}
+
+.icon {
+  transform: translate(-2px, 8px);
+  width: 25px;
+  height: 25px;
 }
