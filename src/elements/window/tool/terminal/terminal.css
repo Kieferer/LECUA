@@ -2,9 +2,9 @@
   background-color: #181818;
   border: medium solid #0f0f0f;
   overflow: scroll;
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 0;
+  left: 273px;
   width: 99.5%;
   height: 200px;
 }
