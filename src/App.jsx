@@ -6,11 +6,12 @@ import { useState } from "react";
 
 function App() {
   const [code, setCode] = useState('');
+  const [filePath, setFilePath] = useState('');
   return (
     <div className="container">
       <TitleBar />
-      <Hierarchy updatedCode={setCode}/>
-      <CodeEditor updatedCode={code}/>
+      <Hierarchy updatedCode={setCode} filePath={filePath} setFilePath={setFilePath}/>
+      <CodeEditor updatedCode={code} filePath={filePath} setFilePath={setFilePath}/>
     </div>
   );
 }

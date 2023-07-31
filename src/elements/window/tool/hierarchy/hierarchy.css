@@ -12,7 +12,8 @@
   background-color: #181818;
   border: medium solid #0f0f0f;
   overflow: scroll;
-  position: absolute;
+  position: fixed;
+  user-select: none;
 }
 
 .hierarchyPanel::-webkit-scrollbar {
