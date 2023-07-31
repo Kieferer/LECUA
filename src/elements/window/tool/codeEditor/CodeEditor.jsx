@@ -51,9 +51,7 @@ const CodeEditor = ({updatedCode, filePath, setFilePath}) => {
 
       if (event.ctrlKey) {
         if (event.key === "t"){
-
-          let urlOrCode = url ? url : code;
-          invoke("compile", {is_temporary_file: false, code: urlOrCode}).then(output => setOutputLog(output));
+          invoke("compile", {code: code}).then(output => setOutputLog(output));
           //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
         }
           return;
