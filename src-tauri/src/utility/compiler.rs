@@ -1,9 +1,6 @@
-use std::any::Any;
-use std::env::temp_dir;
 use std::io::Write;
+use std::process::Command;
 use tempfile::NamedTempFile;
-use std::process::{Command, ExitStatus, Stdio};
-use tauri::Error;
 
 #[tauri::command]
 pub fn compile(code: String) -> String {
