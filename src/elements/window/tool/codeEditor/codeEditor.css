@@ -1,8 +1,22 @@
 .editorPanel {
   top: 45px;
-  bottom: 0;
-  left: 200px;
+  bottom: 200px;
+  left: 275px;
   right: 0;
-  position: absolute;
-  overflow: clip;
+  position: fixed;
+  overflow: scroll;
+}
+
+.editorPanel::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.editorPanel::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+.editorPanel::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
 }
