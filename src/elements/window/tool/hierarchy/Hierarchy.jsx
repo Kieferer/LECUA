@@ -6,10 +6,10 @@ import './hierarchy.css'
 const Hierarchy = ({updatedCode, filePath, setFilePath}) => {
   const [isUpdated, setUpdated] = useState(false);
   const [data, setData] = useState();
-  useEffect(() => {
-    invoke("get_file_system_representation", {origin: "C:\\Kieferer\\LECUA"}).then(x => setData(JSON.parse(x)));
-    setUpdated(false);
-  }, [isUpdated])
+  
+  const loadRepository = (root) => {
+    invoke("get_file_system_representation", {origin: root}).then(x => setData(JSON.parse(x)));
+  }
 
   const loadFile = (path) => {
     setFilePath(path);
