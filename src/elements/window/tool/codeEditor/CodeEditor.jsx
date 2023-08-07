@@ -7,7 +7,7 @@ import './codeEditor.css'
 import Terminal from '../terminal/Terminal';
 
 
-const CodeEditor = ({updatedCode}) => {
+const CodeEditor = ({updatedCode, filePath, setFilePath}) => {
   const [cursorPos, setCursorPos] = useState(0);
   const [cursorPosX, setCursorPosX] = useState(0);
   const [cursorPosY, setCursorPosY] = useState(0);
@@ -50,10 +50,11 @@ const CodeEditor = ({updatedCode}) => {
       }
 
       if (event.ctrlKey) {
-        if (event.key === "t")
-        invoke("compile", {code: code}).then(output => setOutputLog(output));
-        //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
-        return;
+        if (event.key === "t"){
+          invoke("compile", {code: code}).then(output => setOutputLog(output));
+          //invoke("adjust_cursor_y", {text: code, y: cursorPosY, direction: 0}).then(m => console.log(m))
+        }
+          return;
       }
 
       if (event.altKey) {
@@ -108,7 +109,7 @@ const CodeEditor = ({updatedCode}) => {
           {visualizerCode}
         </code>
       </pre>
-      <Terminal output={outputLog}/>
+      <Terminal output={outputLog} setOutputLog={setOutputLog}/>
     </div>
   )
 };
