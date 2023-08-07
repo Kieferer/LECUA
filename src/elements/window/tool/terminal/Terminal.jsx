@@ -11,10 +11,11 @@ function Terminal({ output, setOutputLog }) {
   }
 
   const handleKeyDown = (event) => {
+    console.log(event.key)
     if (event.key === "Backspace") {
       if (terminalInput.length > 0) {
-        setOutputLog((prevText) => prevText.slice(0, -1));
-        setTerminalInput((prevText) => prevText.slice(0, -1));
+        setOutputLog(prevText => prevText.slice(0, -1));
+        setTerminalInput(prevText => prevText.slice(0, -1));
       }
     }
     if (event.key === "Enter") {
@@ -23,10 +24,14 @@ function Terminal({ output, setOutputLog }) {
     }
     if (event.key.length < 2) {
       event.preventDefault();
-      setTerminalInput((prevText) => prevText + event.key);
-      setOutputLog((prevText) => prevText + event.key);
+      setTerminalInput(prevInput => prevInput + event.key);
+      setOutputLog(prevLog => prevLog + event.key);
     }
   };
+
+  useEffect(() => {
+    console.log(terminalInput)
+  }, [terminalInput, output])
 
   useEffect(() => {
     invoke("send_command_to_terminal", { command: "powershell" }).then(out => setOutputLog(out));
@@ -37,11 +42,12 @@ function Terminal({ output, setOutputLog }) {
     return () => {
       terminalRef.current.removeEventListener('keydown', handleKeyDown);
     };
-  }, [output, terminalInput]);
+  }, []);
+  
 
   return (
-    <div className='terminal' id='terminal'>
-      <pre ref={terminalRef}>{output}</pre>
+    <div className='terminal' ref={terminalRef} tabIndex={0} id={'terminal'}>
+      <pre>{output}</pre>
     </div>
   );
 }
