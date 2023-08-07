@@ -1,6 +1,8 @@
 ## LECUA
 **LECUA is a lightweight code editor suitable for experimenting with single-file applications written in Rust.** It aims to include just enough features to make it possible and slightly ease the development of micro-projects, mainly for testing purposes. Based on its features and functionality, it's a desktop native app giving a similar experience or even an alternative to online code compilers.
 
+<a href="https://drive.google.com/uc?export=view&id=1OPG-_Lq2QCCupkOyoexME3akZKrsqW_o"><img src="https://drive.google.com/uc?export=view&id=1OPG-_Lq2QCCupkOyoexME3akZKrsqW_o" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
+
 ## Used technologies
 ### Backend
 * Rust
