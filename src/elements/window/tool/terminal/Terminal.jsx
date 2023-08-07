@@ -22,6 +22,7 @@ function Terminal({ output, setOutputLog }) {
       setTerminalInput("");
     }
     if (event.key.length < 2) {
+      event.preventDefault();
       setTerminalInput((prevText) => prevText + event.key);
       setOutputLog((prevText) => prevText + event.key);
     }

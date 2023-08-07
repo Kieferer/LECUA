@@ -72,6 +72,7 @@ const CodeEditor = ({ updatedCode, filePath, setFilePath, setOutputLog }) => {
       }
     }
     if (event.key.length < 2) {
+      event.preventDefault();
       setCode((prevText) => prevText + event.key);
       setCursorPos((value) => value + 1);
     }
