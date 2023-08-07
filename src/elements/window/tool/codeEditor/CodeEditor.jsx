@@ -97,7 +97,7 @@ const CodeEditor = ({ updatedCode, filePath, setFilePath, setOutputLog }) => {
     return () => {
       editorRef.current.removeEventListener('keydown', handleKeyDown);
     };
-  }, [code, cursorPosY]);
+  }, []);
 
   return (
     <div className="editorPanel" ref={editorRef} id={"editor"}>
