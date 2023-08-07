@@ -4,7 +4,6 @@ import Folder from "./Folder";
 import './hierarchy.css'
 
 const Hierarchy = ({updatedCode, filePath, setFilePath}) => {
-  const [isUpdated, setUpdated] = useState(false);
   const [data, setData] = useState();
   
   const loadRepository = (root) => {
