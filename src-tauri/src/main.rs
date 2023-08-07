@@ -8,6 +8,8 @@ mod compiler;
 mod cursor;
 #[path = "./utility/file.rs"]
 mod file;
+#[path = "./utility/terminal.rs"]
+mod terminal;
 
 fn main() {
     tauri::Builder::default()
@@ -20,7 +22,8 @@ fn main() {
             compiler::compile,
             math::clamp,
             file::get_file_system_representation,
-            file::load_file
+            file::load_file,
+            terminal::send_command_to_terminal
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

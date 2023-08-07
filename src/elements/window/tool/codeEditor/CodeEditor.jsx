@@ -109,7 +109,7 @@ const CodeEditor = ({updatedCode, filePath, setFilePath}) => {
           {visualizerCode}
         </code>
       </pre>
-      <Terminal output={outputLog}/>
+      <Terminal output={outputLog} setOutputLog={setOutputLog}/>
     </div>
   )
 };
