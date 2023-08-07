@@ -2,6 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use serde::{Serialize};
 use serde_json;
+use crate::terminal::send_command_to_terminal;
 
 #[derive(Serialize)]
 struct FileSystemNode {
@@ -14,6 +15,14 @@ struct FileSystemNode {
 pub fn load_file(path: String) -> String {
     let file_data = fs::read_to_string(path);
     file_data.unwrap()
+}
+
+#[tauri::command]
+pub fn get_running_location() -> String {
+    let command: String = "Get-Location".to_string();
+    let output = send_command_to_terminal(command);
+    let location = output.lines().nth(3).unwrap().to_string();
+    location
 }
 
 #[tauri::command]

@@ -23,6 +23,7 @@ fn main() {
             math::clamp,
             file::get_file_system_representation,
             file::load_file,
+            file::get_running_location,
             terminal::send_command_to_terminal
         ])
         .run(tauri::generate_context!())
