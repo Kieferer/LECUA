@@ -72,6 +72,7 @@ const CodeEditor = ({ updatedCode, filePath, setFilePath, setOutputLog }) => {
       }
     }
     if (event.key.length < 2) {
+      event.preventDefault();
       setCode((prevText) => prevText + event.key);
       setCursorPos((value) => value + 1);
     }
@@ -96,7 +97,7 @@ const CodeEditor = ({ updatedCode, filePath, setFilePath, setOutputLog }) => {
     return () => {
       editorRef.current.removeEventListener('keydown', handleKeyDown);
     };
-  }, [code, cursorPosY]);
+  }, []);
 
   return (
     <div className="editorPanel" ref={editorRef} id={"editor"}>

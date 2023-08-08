@@ -6,6 +6,10 @@ function Terminal({ output, setOutputLog }) {
   const [terminalInput, setTerminalInput] = useState("");
   const terminalRef = useRef(null);
 
+  const scrollToBottom = () => {
+    terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+  }
+
   const sendCommand = (input) => {
     invoke("send_command_to_terminal", { command: input }).then(out => setOutputLog(output + "\n" + out));
   }
@@ -13,8 +17,8 @@ function Terminal({ output, setOutputLog }) {
   const handleKeyDown = (event) => {
     if (event.key === "Backspace") {
       if (terminalInput.length > 0) {
-        setOutputLog((prevText) => prevText.slice(0, -1));
-        setTerminalInput((prevText) => prevText.slice(0, -1));
+        setOutputLog(prevText => prevText.slice(0, -1));
+        setTerminalInput(prevText => prevText.slice(0, -1));
       }
     }
     if (event.key === "Enter") {
@@ -22,25 +26,30 @@ function Terminal({ output, setOutputLog }) {
       setTerminalInput("");
     }
     if (event.key.length < 2) {
-      setTerminalInput((prevText) => prevText + event.key);
-      setOutputLog((prevText) => prevText + event.key);
+      event.preventDefault();
+      setTerminalInput(prevInput => prevInput + event.key);
+      setOutputLog(prevLog => prevLog + event.key);
     }
   };
 
   useEffect(() => {
-    invoke("send_command_to_terminal", { command: "powershell" }).then(out => setOutputLog(out));
+    invoke("send_command_to_terminal", { command: "" }).then(out => setOutputLog(out));
   }, [])
 
   useEffect(() => {
-    terminalRef.current.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      terminalRef.current.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [output, terminalInput]);
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [output]);
 
   return (
-    <div className='terminal' id='terminal'>
-      <pre ref={terminalRef}>{output}</pre>
+    <div className='terminal' ref={terminalRef} id={'terminal'}>
+      <pre>{output}</pre>
     </div>
   );
 }

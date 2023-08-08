@@ -3,7 +3,7 @@ import TitleBar from "./elements/window/title/TitleBar.jsx";
 import Hierarchy from "./elements/window/tool/hierarchy/Hierarchy.jsx";
 import CodeEditor from "./elements/window/tool/codeEditor/CodeEditor.jsx";
 import Terminal from "./elements/window/tool/terminal/Terminal";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function App() {
   const [code, setCode] = useState('');
