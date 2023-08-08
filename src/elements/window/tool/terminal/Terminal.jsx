@@ -6,12 +6,15 @@ function Terminal({ output, setOutputLog }) {
   const [terminalInput, setTerminalInput] = useState("");
   const terminalRef = useRef(null);
 
+  const scrollToBottom = () => {
+    terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+  }
+
   const sendCommand = (input) => {
     invoke("send_command_to_terminal", { command: input }).then(out => setOutputLog(output + "\n" + out));
   }
 
   const handleKeyDown = (event) => {
-    console.log(event.key)
     if (event.key === "Backspace") {
       if (terminalInput.length > 0) {
         setOutputLog(prevText => prevText.slice(0, -1));
@@ -30,23 +33,22 @@ function Terminal({ output, setOutputLog }) {
   };
 
   useEffect(() => {
-    console.log(terminalInput)
-  }, [terminalInput, output])
-
-  useEffect(() => {
-    invoke("send_command_to_terminal", { command: "powershell" }).then(out => setOutputLog(out));
+    invoke("send_command_to_terminal", { command: "" }).then(out => setOutputLog(out));
   }, [])
 
   useEffect(() => {
-    terminalRef.current.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      terminalRef.current.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
-  
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [output]);
 
   return (
-    <div className='terminal' ref={terminalRef} tabIndex={0} id={'terminal'}>
+    <div className='terminal' ref={terminalRef} id={'terminal'}>
       <pre>{output}</pre>
     </div>
   );
