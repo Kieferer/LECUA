@@ -1,5 +1,4 @@
 use std::process::Command;
-use tauri::Result;
 
 #[tauri::command]
 pub fn send_command_to_terminal(command: String) -> String {
@@ -10,11 +9,12 @@ pub fn send_command_to_terminal(command: String) -> String {
     let stdout = String::from_utf8_lossy(&output.stdout);
     let stderr = String::from_utf8_lossy(&output.stderr);
 
-    let mut result = stdout.to_string();
+    let mut result = String::new();
     if !stderr.is_empty() {
-        result += "\nError Output:\n";
+        result = "\nError Output:\n".parse().unwrap();
         result += &stderr;
     }
+    result += &*stdout.to_string();
 
     result
 }
