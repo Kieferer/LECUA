@@ -4,7 +4,7 @@ version = "0.0.1"
 description = "A lightweight code editor"
 authors = ["Kieferer"]
 license = ""
-repository = ""
+repository = "https://github.com/Kieferer/LECUA"
 edition = "2021"
 
 [build-dependencies]
