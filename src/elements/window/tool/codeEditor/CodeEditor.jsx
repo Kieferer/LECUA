@@ -1,23 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Prism from 'prismjs';
-import '../../../../../public/css/prism-synthwave84.css';
-import 'prismjs/components/prism-javascript';
 import { invoke } from '@tauri-apps/api/tauri';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-rust.js';
 import './codeEditor.css'
+import './code.css';
 
 const CodeEditor = ({ updatedCode, setOutputLog }) => {
   const [code, setCode] = useState('');
   const editorRef = useRef(null);
 
   const handleKeyDown = (event) => {
-    Prism.highlightAll();
     if (event.ctrlKey) {
+      if (event.key == "h"){
+        Prism.highlightAll();
+      }
       if (event.key === "t") {
         invoke("compile", { code: code }).then(output => setOutputLog(output));
       }
       return;
     }
-
     if (event.altKey) {
       switch (event.key) {
         case "s":
@@ -29,13 +30,12 @@ const CodeEditor = ({ updatedCode, setOutputLog }) => {
               "}");
           }
           return;
-
         case "c":
           setCode("");
           return;
       }
     }
-  };
+  }
 
   useEffect(() => {
     if (updatedCode) {
@@ -45,15 +45,8 @@ const CodeEditor = ({ updatedCode, setOutputLog }) => {
 
   useEffect(() => {
     editorRef.current.innerHTML = code;
-  }, [code]);
-
-  /*useEffect(() => {
-    invoke('insert_cursor_symbol', { text: code, pos: Math.min(code.length, cursorPos) }).then((message => {
-      setVisualizerCode(message);
-    }));
-    setCursorPos((value) => Math.min(code.length, value));
     Prism.highlightAll();
-  }, [visualizerCode, cursorPos, code]);*/
+  }, [code]);
 
   useEffect(() => {
     editorRef.current.addEventListener('keydown', handleKeyDown);
@@ -64,8 +57,8 @@ const CodeEditor = ({ updatedCode, setOutputLog }) => {
 
   return (
     <div className="editorPanel">
-      <pre className="language-javascript">
-        <code className="language-javascript" ref={editorRef} id={"editor"} contentEditable>{}</code>
+      <pre className="language-rust">
+        <code className='content' ref={editorRef} id={"editor"} contentEditable spellCheck="false">{ }</code>
       </pre>
     </div>
   )
