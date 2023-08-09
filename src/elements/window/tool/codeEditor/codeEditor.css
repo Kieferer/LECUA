@@ -20,3 +20,8 @@
   background-color: #888;
   border-radius: 5px;
 }
+
+.content {
+  outline: none;
+  font-size: medium;
+}
