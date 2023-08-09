@@ -22,8 +22,8 @@ pub fn load_file(path: String) -> String {
 pub fn get_running_location() -> String {
     let command: String = "Get-Location".to_string();
     let output = send_command_to_terminal(command);
-    let index = get_index_of_dash_line(output).expect("There was no path");
-    let location = output.lines().nth(index).unwrap().to_string();
+    let index = get_index_of_dash_line(output.clone()).expect("Failed to get index");
+    let location = output.lines().nth(index + 1).unwrap().to_string();
     location
 }
 
@@ -69,12 +69,6 @@ fn build_file_system_tree(folder_path: &Path) -> FileSystemNode {
 
 fn get_index_of_dash_line(output: String) -> Option<usize> {
     let lines: Vec<&str> = output.lines().collect();
-
-    for (index, line) in lines.iter().enumerate() {
-        if line == &"----" && index + 1 < lines.len() {
-            return Some(index + 1);
-        }
-    }
-
-    None
+    let mut  index = lines.iter().position(|&r| r.contains("----"));
+    index
 }
