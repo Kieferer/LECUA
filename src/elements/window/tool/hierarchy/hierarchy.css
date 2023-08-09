@@ -57,7 +57,10 @@
   display: block;
   position: fixed;
   padding: 0.2em 0;
-  margin: 0;
+  font-size: 15px;
+  font-weight:lighter;
+  backdrop-filter: blur(10px);
+  color: #888;
 }
 
 .folderContent {
