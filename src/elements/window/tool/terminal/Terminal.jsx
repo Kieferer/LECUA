@@ -3,7 +3,9 @@ import { invoke } from '@tauri-apps/api/tauri';
 import './terminal.css';
 
 function Terminal({ output, setOutputLog }) {
+  let [indexOfHistoryInput, setIndexOfHistoryInput] = useState(0);
   const [commandInput, setCommandInput] = useState('');
+  const [inputHistory, setInputHistory] = useState([]);
   const contentRef = useRef(null);
   const terminalRef = useRef(null);
 
@@ -13,33 +15,73 @@ function Terminal({ output, setOutputLog }) {
 
   const sendCommand = (input) => {
     invoke('send_command_to_terminal', { command: input }).then((out) =>
-      setOutputLog((prevOutput) => prevOutput + '\n' + out)
+      setOutputLog((prevOutput) => prevOutput + '\n' + removeEmptyLines(out))
     );
   };
 
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.key === 'Enter') {
-        console.log(event.key)
+  const moveCursorToEnd = (inputField) => {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(inputField);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    inputField.focus();
+  }
+
+  const removeEmptyLines = (input) => {
+    const lines = input.split("\n");
+    let notEmptyLines = [];
+    for (let line of lines) {
+      if (line.trim().length >= 1) {
+        notEmptyLines.push(line);
+      }
+    }
+    return notEmptyLines.join('\n');
+  }
+
+  const addInputToHistory = (input) => {
+    setInputHistory((arr) => [...arr, input]);
+  }
+
+  const handleKeyDown = useCallback((event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (commandInput == "clear") {
+        setOutputLog("")
+        contentRef.current.innerHTML = "";
+      }
+      addInputToHistory(commandInput);
+      sendCommand(commandInput);
+      setCommandInput("");
+    }
+    if (event.key === 'Backspace') {
+      if (commandInput.length <= 0) {
         event.preventDefault();
-        if (commandInput == "clear"){
-          setOutputLog("")
-          contentRef.current.innerHTML = "";
-        }
-        sendCommand(commandInput);
-        setCommandInput("");
+      } else {
+        setCommandInput((text) => text.substring(0, text.length - 1));
       }
-      if (event.key === 'Backspace') {
-        if (commandInput.length <= 0) {
-          event.preventDefault();
-        } else {
-          setCommandInput((text) => text.substring(0, text.length - 1));
-        }
+    }
+    if (event.key.length < 2) {
+      setCommandInput((text) => text + event.key);
+    }
+
+    if (event.key == "ArrowUp"){
+      event.preventDefault();
+      if (indexOfHistoryInput + 1 < inputHistory.length){
+        indexOfHistoryInput++;
+        setIndexOfHistoryInput((value) => value + 1);
+        getCommandFromHistory();
       }
-      if (event.key.length < 2) {
-        setCommandInput((text) => text + event.key);
+    }
+    if (event.key == "ArrowDown") {
+      event.preventDefault();
+      if (indexOfHistoryInput - 1 >= 0){
+        setIndexOfHistoryInput((value) => value - 1);
+        getCommandFromHistory();
       }
-    },
+    }
+  },
     [commandInput]
   );
 
@@ -60,12 +102,45 @@ function Terminal({ output, setOutputLog }) {
   useEffect(() => {
     contentRef.current.innerHTML = output;
     scrollToBottom();
+    moveCursorToEnd(contentRef.current);
   }, [output]);
+
+  const getCommandFromHistory = (direction) => {
+    /*if (direction > 0){
+      //Pozítiv, Ascending, +1
+      const previousCommand = (indexOfHistoryInput == 0) ? commandInput : inputHistory[indexOfHistoryInput];
+      const nextCommand = inputHistory[indexOfHistoryInput + direction];
+      if (indexOfHistoryInput + direction < inputHistory.length) {
+
+        indexOfHistoryInput += direction;
+      }
+    } else {
+      //Negatív, Descanding, -1
+      const previousCommand = inputHistory[indexOfHistoryInput];
+      const nextCommand = inputHistory[indexOfHistoryInput + direction];
+      if (indexOfHistoryInput > 0) {
+        //A jelenlegi index tobb mint 0, kovetkezo erteke mar lehet nulla.
+
+        indexOfHistoryInput += direction;
+      }
+    }
+
+    const insertCommand = (previousCommand, nextCommand) => {
+
+    }
+
+    const originalText = contentRef.current.innerHTML; 
+    const inputStart = originalText.length - (commandInput.length);
+    const modifiedText = originalText.slice(0, inputStart);
+    const resultText = modifiedText + inputHistory[indexOfHistoryInput];
+    contentRef.current.innerHTML = resultText;
+    console.log(indexOfHistoryInput);*/
+  }
 
   return (
     <div className='terminal' ref={terminalRef}>
       <pre>
-        <div className='content' ref={contentRef} id={'terminal'} contentEditable></div>
+        <div className='content' ref={contentRef} id={'terminal'} contentEditable spellCheck="false"></div>
       </pre>
     </div>
   );
