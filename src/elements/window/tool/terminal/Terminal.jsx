@@ -1,57 +1,149 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import './terminal.css';
 
 function Terminal({ output, setOutputLog }) {
-  const [terminalInput, setTerminalInput] = useState("");
+  let [indexOfHistoryInput, setIndexOfHistoryInput] = useState(0);
+  const [commandInput, setCommandInput] = useState('');
+  const [inputHistory, setInputHistory] = useState([]);
+  const contentRef = useRef(null);
   const terminalRef = useRef(null);
 
   const scrollToBottom = () => {
     terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-  }
-
-  const sendCommand = (input) => {
-    invoke("send_command_to_terminal", { command: input }).then(out => setOutputLog(output + "\n" + out));
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Backspace") {
-      if (terminalInput.length > 0) {
-        setOutputLog(prevText => prevText.slice(0, -1));
-        setTerminalInput(prevText => prevText.slice(0, -1));
-      }
-    }
-    if (event.key === "Enter") {
-      sendCommand(terminalInput);
-      setTerminalInput("");
-    }
-    if (event.key.length < 2) {
-      event.preventDefault();
-      setTerminalInput(prevInput => prevInput + event.key);
-      setOutputLog(prevLog => prevLog + event.key);
-    }
   };
 
-  useEffect(() => {
-    invoke("send_command_to_terminal", { command: "" }).then(out => setOutputLog(out));
-  }, [])
+  const sendCommand = (input) => {
+    invoke('send_command_to_terminal', { command: input }).then((out) =>
+      setOutputLog((prevOutput) => prevOutput + '\n' + removeEmptyLines(out))
+    );
+  };
+
+  const moveCursorToEnd = (inputField) => {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(inputField);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    inputField.focus();
+  }
+
+  const removeEmptyLines = (input) => {
+    const lines = input.split("\n");
+    let notEmptyLines = [];
+    for (let line of lines) {
+      if (line.trim().length >= 1) {
+        notEmptyLines.push(line);
+      }
+    }
+    return notEmptyLines.join('\n');
+  }
+
+  const addInputToHistory = (input) => {
+    setInputHistory((arr) => [...arr, input]);
+  }
+
+  const handleKeyDown = useCallback((event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (commandInput == "clear") {
+        setOutputLog("")
+        contentRef.current.innerHTML = "";
+      }
+      addInputToHistory(commandInput);
+      sendCommand(commandInput);
+      setCommandInput("");
+    }
+    if (event.key === 'Backspace') {
+      if (commandInput.length <= 0) {
+        event.preventDefault();
+      } else {
+        setCommandInput((text) => text.substring(0, text.length - 1));
+      }
+    }
+    if (event.key.length < 2) {
+      setCommandInput((text) => text + event.key);
+    }
+
+    if (event.key == "ArrowUp"){
+      event.preventDefault();
+      if (indexOfHistoryInput + 1 < inputHistory.length){
+        indexOfHistoryInput++;
+        setIndexOfHistoryInput((value) => value + 1);
+        getCommandFromHistory();
+      }
+    }
+    if (event.key == "ArrowDown") {
+      event.preventDefault();
+      if (indexOfHistoryInput - 1 >= 0){
+        setIndexOfHistoryInput((value) => value - 1);
+        getCommandFromHistory();
+      }
+    }
+  },
+    [commandInput]
+  );
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    invoke('send_command_to_terminal', { command: '' }).then((out) => {
+      setOutputLog(out);
+      contentRef.current.value = out;
+    });
   }, []);
 
   useEffect(() => {
+    contentRef.current.addEventListener('keydown', handleKeyDown);
+    return () => {
+      contentRef.current.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
+  useEffect(() => {
+    contentRef.current.innerHTML = output;
     scrollToBottom();
+    moveCursorToEnd(contentRef.current);
   }, [output]);
 
+  const getCommandFromHistory = (direction) => {
+    /*if (direction > 0){
+      //Pozítiv, Ascending, +1
+      const previousCommand = (indexOfHistoryInput == 0) ? commandInput : inputHistory[indexOfHistoryInput];
+      const nextCommand = inputHistory[indexOfHistoryInput + direction];
+      if (indexOfHistoryInput + direction < inputHistory.length) {
+
+        indexOfHistoryInput += direction;
+      }
+    } else {
+      //Negatív, Descanding, -1
+      const previousCommand = inputHistory[indexOfHistoryInput];
+      const nextCommand = inputHistory[indexOfHistoryInput + direction];
+      if (indexOfHistoryInput > 0) {
+        //A jelenlegi index tobb mint 0, kovetkezo erteke mar lehet nulla.
+
+        indexOfHistoryInput += direction;
+      }
+    }
+
+    const insertCommand = (previousCommand, nextCommand) => {
+
+    }
+
+    const originalText = contentRef.current.innerHTML; 
+    const inputStart = originalText.length - (commandInput.length);
+    const modifiedText = originalText.slice(0, inputStart);
+    const resultText = modifiedText + inputHistory[indexOfHistoryInput];
+    contentRef.current.innerHTML = resultText;
+    console.log(indexOfHistoryInput);*/
+  }
+
   return (
-    <div className='terminal' ref={terminalRef} id={'terminal'}>
-      <pre>{output}</pre>
+    <div className='terminal' ref={terminalRef}>
+      <pre>
+        <div className='content' ref={contentRef} id={'terminal'} contentEditable spellCheck="false"></div>
+      </pre>
     </div>
   );
 }
 
-export default Terminal
+export default Terminal;

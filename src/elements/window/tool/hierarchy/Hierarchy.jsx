@@ -35,7 +35,7 @@ const Hierarchy = ({ updatedCode, filePath, setFilePath }) => {
 
   return (
     <div className={"hierarchyPanel"} id="hierarchy">
-      <input ref={urlInputRef} id="hierarchy" className="urlInput" onKeyDown={handleKeyEnter} type="text" />
+      <input ref={urlInputRef} className="urlInput" onKeyDown={handleKeyEnter} type="text" />
       <div className="folderContent">
         {data && <Folder name={data.name} children={data.children} loadFile={loadFile} />}
       </div>
