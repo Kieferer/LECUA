@@ -61,6 +61,7 @@
   font-weight:lighter;
   backdrop-filter: blur(10px);
   color: #888;
+  z-index: 999;
 }
 
 .folderContent {
