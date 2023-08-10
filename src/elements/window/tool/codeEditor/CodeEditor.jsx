@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-rust.js';
@@ -9,7 +9,7 @@ const CodeEditor = ({ updatedCode, setOutputLog }) => {
   const [code, setCode] = useState('');
   const editorRef = useRef(null);
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = useCallback((event) => {
     if (event.ctrlKey) {
       if (event.key == "h"){
         Prism.highlightAll();
@@ -20,22 +20,17 @@ const CodeEditor = ({ updatedCode, setOutputLog }) => {
       return;
     }
     if (event.altKey) {
-      switch (event.key) {
-        case "s":
-          if (code.includes("main.")) {
-            let codeWithoutSpreadKeyWord = code.replace("main.", "");
-            setCode(codeWithoutSpreadKeyWord +
-              "pub fn main() {\n" +
-              "    println!(\"Hello, World!\");\n" +
-              "}");
-          }
-          return;
-        case "c":
-          setCode("");
-          return;
+      if (event.key == "c"){
+        if (editorRef.current.includes("main.")) {
+          let codeWithoutSpreadKeyWord = code.replace("main.", "");
+          editorRef.current.value = codeWithoutSpreadKeyWord +
+            "pub fn main() {\n" +
+            "    println!(\"Hello, World!\");\n" +
+            "}";
+        }
       }
     }
-  }
+  })
 
   useEffect(() => {
     if (updatedCode) {
@@ -57,7 +52,7 @@ const CodeEditor = ({ updatedCode, setOutputLog }) => {
 
   return (
     <div className="editorPanel">
-      <pre className="language-rust">
+      <pre className="language-rust" tabIndex={-1}>
         <code className='content' ref={editorRef} id={"editor"} contentEditable spellCheck="false">{ }</code>
       </pre>
     </div>
