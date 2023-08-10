@@ -13,7 +13,7 @@ function Terminal({ output, setOutputLog }) {
 
   const sendCommand = (input) => {
     invoke('send_command_to_terminal', { command: input }).then((out) =>
-      setOutputLog((prevOutput) => prevOutput + '\n' + removeEmptyLines(out))
+      setOutputLog((prevOutput) => prevOutput + '\n' + removeEmptyLines(out + '\n'))
     );
   };
 
