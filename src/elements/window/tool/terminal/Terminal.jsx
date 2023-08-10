@@ -3,9 +3,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import './terminal.css';
 
 function Terminal({ output, setOutputLog }) {
-  let [indexOfHistoryInput, setIndexOfHistoryInput] = useState(0);
   const [commandInput, setCommandInput] = useState('');
-  const [inputHistory, setInputHistory] = useState([]);
   const contentRef = useRef(null);
   const terminalRef = useRef(null);
 
@@ -40,10 +38,6 @@ function Terminal({ output, setOutputLog }) {
     return notEmptyLines.join('\n');
   }
 
-  const addInputToHistory = (input) => {
-    setInputHistory((arr) => [...arr, input]);
-  }
-
   const handleKeyDown = useCallback((event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -51,7 +45,6 @@ function Terminal({ output, setOutputLog }) {
         setOutputLog("")
         contentRef.current.innerHTML = "";
       }
-      addInputToHistory(commandInput);
       sendCommand(commandInput);
       setCommandInput("");
     }
@@ -104,38 +97,6 @@ function Terminal({ output, setOutputLog }) {
     scrollToBottom();
     moveCursorToEnd(contentRef.current);
   }, [output]);
-
-  const getCommandFromHistory = (direction) => {
-    /*if (direction > 0){
-      //Pozítiv, Ascending, +1
-      const previousCommand = (indexOfHistoryInput == 0) ? commandInput : inputHistory[indexOfHistoryInput];
-      const nextCommand = inputHistory[indexOfHistoryInput + direction];
-      if (indexOfHistoryInput + direction < inputHistory.length) {
-
-        indexOfHistoryInput += direction;
-      }
-    } else {
-      //Negatív, Descanding, -1
-      const previousCommand = inputHistory[indexOfHistoryInput];
-      const nextCommand = inputHistory[indexOfHistoryInput + direction];
-      if (indexOfHistoryInput > 0) {
-        //A jelenlegi index tobb mint 0, kovetkezo erteke mar lehet nulla.
-
-        indexOfHistoryInput += direction;
-      }
-    }
-
-    const insertCommand = (previousCommand, nextCommand) => {
-
-    }
-
-    const originalText = contentRef.current.innerHTML; 
-    const inputStart = originalText.length - (commandInput.length);
-    const modifiedText = originalText.slice(0, inputStart);
-    const resultText = modifiedText + inputHistory[indexOfHistoryInput];
-    contentRef.current.innerHTML = resultText;
-    console.log(indexOfHistoryInput);*/
-  }
 
   return (
     <div className='terminal' ref={terminalRef}>
