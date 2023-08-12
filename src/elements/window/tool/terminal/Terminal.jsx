@@ -3,29 +3,20 @@ import { invoke } from '@tauri-apps/api/tauri';
 import './terminal.css';
 
 function Terminal({ output, setOutputLog }) {
-  const [commandInput, setCommandInput] = useState('');
+  const [outputWithCommand, setOutputWithCommand] = useState("");
   const contentRef = useRef(null);
   const terminalRef = useRef(null);
+  const [commandInput, setCommandInput] = useState("");
 
+  const sendCommand = () => {
+    invoke('send_command_to_terminal', { command: commandInput }).then((out) =>
+      setOutputLog((prevOutput) => prevOutput + '\n' + removeEmptyLines(out))
+    );
+  };
   const scrollToBottom = () => {
     terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
   };
 
-  const sendCommand = (input) => {
-    invoke('send_command_to_terminal', { command: input }).then((out) =>
-      setOutputLog((prevOutput) => prevOutput + '\n' + removeEmptyLines(out + '\n'))
-    );
-  };
-
-  const moveCursorToEnd = (inputField) => {
-    const range = document.createRange();
-    const selection = window.getSelection();
-    range.selectNodeContents(inputField);
-    range.collapse(false);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    inputField.focus();
-  }
 
   const removeEmptyLines = (input) => {
     const lines = input.split("\n");
@@ -38,45 +29,25 @@ function Terminal({ output, setOutputLog }) {
     return notEmptyLines.join('\n');
   }
 
-  const handleKeyDown = useCallback((event) => {
+  const handleKeyDown = (event) => {
+    console.log(commandInput);
     if (event.key === 'Enter') {
       event.preventDefault();
       if (commandInput == "clear") {
         setOutputLog("")
         contentRef.current.innerHTML = "";
       }
-      sendCommand(commandInput);
+      setOutputLog((out) => out + commandInput);
+      sendCommand();
       setCommandInput("");
     }
     if (event.key === 'Backspace') {
-      if (commandInput.length <= 0) {
-        event.preventDefault();
-      } else {
-        setCommandInput((text) => text.substring(0, text.length - 1));
-      }
+      setCommandInput((text) => text.substring(0, text.length - 1));
     }
     if (event.key.length < 2) {
       setCommandInput((text) => text + event.key);
     }
-
-    if (event.key == "ArrowUp"){
-      event.preventDefault();
-      if (indexOfHistoryInput + 1 < inputHistory.length){
-        indexOfHistoryInput++;
-        setIndexOfHistoryInput((value) => value + 1);
-        getCommandFromHistory();
-      }
-    }
-    if (event.key == "ArrowDown") {
-      event.preventDefault();
-      if (indexOfHistoryInput - 1 >= 0){
-        setIndexOfHistoryInput((value) => value - 1);
-        getCommandFromHistory();
-      }
-    }
-  },
-    [commandInput]
-  );
+  }
 
   useEffect(() => {
     invoke('send_command_to_terminal', { command: '' }).then((out) => {
@@ -90,18 +61,21 @@ function Terminal({ output, setOutputLog }) {
     return () => {
       contentRef.current.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [commandInput]);
 
   useEffect(() => {
     contentRef.current.innerHTML = output;
     scrollToBottom();
-    moveCursorToEnd(contentRef.current);
   }, [output]);
+
+  useEffect(() => {
+    setOutputWithCommand(output + commandInput);
+  }, [commandInput]);
 
   return (
     <div className='terminal' ref={terminalRef}>
       <pre>
-        <div className='content' ref={contentRef} id={'terminal'} contentEditable spellCheck="false"></div>
+        <div className='content' ref={contentRef} id={'terminal'} tabIndex={0}>{outputWithCommand}</div>
       </pre>
     </div>
   );
