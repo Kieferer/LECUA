@@ -30,14 +30,12 @@ function Terminal({ output, setOutputLog }) {
   }
 
   const handleKeyDown = (event) => {
-    console.log(commandInput);
     if (event.key === 'Enter') {
-      event.preventDefault();
+      setOutputLog((out) => out + commandInput);
       if (commandInput == "clear") {
         setOutputLog("")
         contentRef.current.innerHTML = "";
       }
-      setOutputLog((out) => out + commandInput);
       sendCommand();
       setCommandInput("");
     }
