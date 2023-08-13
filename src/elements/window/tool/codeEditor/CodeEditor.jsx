@@ -6,15 +6,32 @@ import { createTheme } from '@uiw/codemirror-themes';
 import { rust } from '@codemirror/lang-rust';
 import { tags } from '@lezer/highlight';
 
-const CodeEditor = ({ updatedCode, setOutputLog }) => {
+const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
   const [code, setCode] = useState('');
   const editorRef = useRef(null);
 
+  const syncroniseCode = () => {
+    let content = editorRef.current.editor.textContent;
+    setCode(content.substring(3, content.length));
+  }
+
   const handleKeyDown = (event) => {
+    const key = event.code;
     if (event.altKey){
-      const key = event.code;
       switch (key) {
-        case "KeyT": invoke("compile", { code: code }).then(output => setOutputLog(output)); break;
+        case "KeyT": {
+          //syncroniseCode();
+          invoke("compile", { code: code }).then(output => setOutputLog(output));
+        } break;
+      }
+    }
+    if (event.ctrlKey) {
+      switch (key) {
+        case "KeyS": {
+          //syncroniseCode();
+          console.log(code)
+          setSaveDialogVisable(true);
+        } break;
       }
     }
   }
