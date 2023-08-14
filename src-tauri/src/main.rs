@@ -24,6 +24,7 @@ fn main() {
             file::get_file_system_representation,
             file::load_file,
             file::get_running_location,
+            file::save_file,
             terminal::send_command_to_terminal
         ])
         .run(tauri::generate_context!())

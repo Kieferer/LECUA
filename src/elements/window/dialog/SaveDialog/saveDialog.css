@@ -1,0 +1,13 @@
+.control-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 15px;
+}
+
+button {
+  width: 110px
+}
+
+p {
+  margin: 0px;
+}

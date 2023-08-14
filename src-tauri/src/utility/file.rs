@@ -1,8 +1,9 @@
 use std::fs;
+use std::fs::File;
+use std::io::Write;
 use std::path::Path;
 use serde::Serialize;
 use serde_json;
-use tauri::utils::debug_eprintln;
 use crate::terminal::send_command_to_terminal;
 
 #[derive(Serialize)]
@@ -16,6 +17,11 @@ struct FileSystemNode {
 pub fn load_file(path: String) -> String {
     let file_data = fs::read_to_string(path);
     file_data.unwrap()
+}
+#[tauri::command]
+pub fn save_file(path: String, content: String) {
+    let mut file = File::create(path).expect("create failed");
+    file.write_all(content.as_bytes()).expect("write failed");
 }
 
 #[tauri::command]
