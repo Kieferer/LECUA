@@ -10,17 +10,11 @@ const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
   const [code, setCode] = useState('');
   const editorRef = useRef(null);
 
-  const syncroniseCode = () => {
-    let content = editorRef.current.editor.textContent;
-    setCode(content.substring(3, content.length));
-  }
-
   const handleKeyDown = (event) => {
     const key = event.code;
     if (event.altKey){
       switch (key) {
         case "KeyT": {
-          //syncroniseCode();
           invoke("compile", { code: code }).then(output => setOutputLog(output));
         } break;
       }
@@ -28,8 +22,6 @@ const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
     if (event.ctrlKey) {
       switch (key) {
         case "KeyS": {
-          //syncroniseCode();
-          console.log(code)
           setSaveDialogVisable(true);
         } break;
       }
@@ -37,9 +29,7 @@ const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
   }
 
   useEffect(() => {
-    if (updatedCode) {
-      setCode(updatedCode);
-    }
+    setCode(updatedCode);
   }, [updatedCode]);
 
   useEffect(() => {
