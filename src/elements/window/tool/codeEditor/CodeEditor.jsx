@@ -6,7 +6,7 @@ import { createTheme } from '@uiw/codemirror-themes';
 import { rust } from '@codemirror/lang-rust';
 import { tags } from '@lezer/highlight';
 
-const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
+const CodeEditor = ({ globalCode, setGlobalCode, setOutputLog, setSaveDialogVisable }) => {
   const [code, setCode] = useState('');
   const editorRef = useRef(null);
 
@@ -29,10 +29,11 @@ const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
   }
 
   useEffect(() => {
-    setCode(updatedCode);
-  }, [updatedCode]);
+    setCode(globalCode);
+  }, [globalCode]);
 
   useEffect(() => {
+    setGlobalCode(code);
     editorRef.current&&editorRef.current.editor.addEventListener('keydown', handleKeyDown);
     return () => {
       editorRef.current&&editorRef.current.editor.removeEventListener('keydown', handleKeyDown);
