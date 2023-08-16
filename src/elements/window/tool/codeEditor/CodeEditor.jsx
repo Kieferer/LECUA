@@ -6,7 +6,7 @@ import { createTheme } from '@uiw/codemirror-themes';
 import { rust } from '@codemirror/lang-rust';
 import { tags } from '@lezer/highlight';
 
-const CodeEditor = ({ globalCode, setGlobalCode, setOutputLog, setSaveDialogVisable }) => {
+const CodeEditor = ({ globalCode, setOutputLog, setSaveDialogVisable }) => {
   const [code, setCode] = useState('');
   const editorRef = useRef(null);
 
@@ -15,6 +15,7 @@ const CodeEditor = ({ globalCode, setGlobalCode, setOutputLog, setSaveDialogVisa
     if (event.altKey){
       switch (key) {
         case "KeyT": {
+          console.log(code)
           invoke("compile", { code: code }).then(output => setOutputLog(output));
         } break;
       }
@@ -33,12 +34,11 @@ const CodeEditor = ({ globalCode, setGlobalCode, setOutputLog, setSaveDialogVisa
   }, [globalCode]);
 
   useEffect(() => {
-    setGlobalCode(code);
     editorRef.current&&editorRef.current.editor.addEventListener('keydown', handleKeyDown);
     return () => {
       editorRef.current&&editorRef.current.editor.removeEventListener('keydown', handleKeyDown);
     };
-  }, [code]);
+  }, []);
 
   const rustTheme = createTheme({
     settings: {
