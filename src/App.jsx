@@ -7,7 +7,7 @@ import { useState } from "react";
 import SaveDialog from "./elements/window/dialog/SaveDialog/SaveDialog";
 
 function App() {
-  const [code, setCode] = useState('');
+  const [globalCode, setGlobalCode] = useState('');
   const [filePath, setFilePath] = useState('');
   const [outputLog, setOutputLog] = useState("");
   const [isSaveDialogVisible, setSaveDialogVisible] = useState(false);
@@ -15,10 +15,10 @@ function App() {
   return (
     <div className="container">
       <TitleBar/>
-      <Hierarchy setCode={setCode} filePath={filePath} setFilePath={setFilePath}/>
-      <CodeEditor updatedCode={code} setOutputLog={setOutputLog} filePath={filePath} setFilePath={setFilePath} setSaveDialogVisable={setSaveDialogVisible}/>
+      <Hierarchy setGlobalCode={setGlobalCode} filePath={filePath} setFilePath={setFilePath}/>
+      <CodeEditor globalCode={globalCode} setGlobalCode={setGlobalCode} setOutputLog={setOutputLog} filePath={filePath} setFilePath={setFilePath} setSaveDialogVisable={setSaveDialogVisible}/>
       <Terminal output={outputLog} setOutputLog={setOutputLog}/>
-      <SaveDialog isVisible={isSaveDialogVisible} setVisible={setSaveDialogVisible} filePath={filePath} code={code}/>
+      <SaveDialog isVisible={isSaveDialogVisible} setVisible={setSaveDialogVisible} filePath={filePath} globalCode={globalCode}/>
     </div>
   );
 }
