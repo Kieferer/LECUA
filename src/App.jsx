@@ -1,9 +1,9 @@
+import { useState } from "react";
 import "./App.css";
 import TitleBar from "./elements/window/title/TitleBar.jsx";
 import Hierarchy from "./elements/window/tool/hierarchy/Hierarchy.jsx";
 import CodeEditor from "./elements/window/tool/codeEditor/CodeEditor.jsx";
 import Terminal from "./elements/window/tool/terminal/Terminal";
-import { useState } from "react";
 import SaveDialog from "./elements/window/dialog/SaveDialog/SaveDialog";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
       <Hierarchy setGlobalCode={setGlobalCode} filePath={filePath} setFilePath={setFilePath}/>
       <CodeEditor globalCode={globalCode} setGlobalCode={setGlobalCode} setOutputLog={setOutputLog} filePath={filePath} setFilePath={setFilePath} setSaveDialogVisable={setSaveDialogVisible}/>
       <Terminal output={outputLog} setOutputLog={setOutputLog}/>
-      <SaveDialog isVisible={isSaveDialogVisible} setVisible={setSaveDialogVisible} filePath={filePath} globalCode={globalCode}/>
+      { isSaveDialogVisible && <SaveDialog setVisible={setSaveDialogVisible} filePath={filePath} globalCode={globalCode}/>}
     </div>
   );
 }
