@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import Folder from "./Folder";
 import './hierarchy.css'
 
-const Hierarchy = ({ updatedCode, filePath, setFilePath }) => {
+const Hierarchy = ({ setGlobalCode, filePath, setFilePath }) => {
   const [data, setData] = useState();
   const [url, setURL] = useState("");
   const urlInputRef = useRef(null);
@@ -14,7 +14,7 @@ const Hierarchy = ({ updatedCode, filePath, setFilePath }) => {
 
   const loadFile = (path) => {
     setFilePath(path);
-    invoke("load_file", { path: path }).then(data => updatedCode(data));
+    invoke("load_file", { path: path }).then(data => setGlobalCode(data));
   }
 
   const handleKeyEnter = (event) => {

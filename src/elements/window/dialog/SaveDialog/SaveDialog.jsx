@@ -1,29 +1,33 @@
 import React from 'react'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/tauri';
 import './saveDialog.css'
 import Dialog from '../Dialog';
 
-function SaveDialog({ isVisible, setVisable, filePath, code }) {
-  useEffect(() => {
-    if (isVisible && filePath !== "") {
-      invoke("save_file", { path: filePath, content: code });
-      setVisable(false);
-    }
-  }, [isVisible, filePath, code, setVisable]);
-  
-
+function SaveDialog({ setVisible, filePath, globalCode }) {
   const fileNameInputRef = useRef(null);
   const targetFolderInputRef = useRef(null);
 
+  useEffect(() => {
+    if (filePath !== "") {
+      saveFile(filePath);
+    }
+  }, [filePath]);
+
   const handleClickSave = () => {
     const path = targetFolderInputRef.current.value + "/" + fileNameInputRef.current.value;
-    invoke("save_file", { "path": path, "content": code });
+    saveFile(path);
+  }
+  
+  const handleClickCancel = () => {
+    setVisible(false);
+  }
+  
+  const saveFile = (path) => {
+    invoke("save_file", { path: path, content: globalCode });
+    setVisible(false);
   }
 
-  const handleClickCancel = () => {
-    setVisable(false);
-  }
 
   return (
     <Dialog>

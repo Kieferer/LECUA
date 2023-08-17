@@ -6,30 +6,21 @@ import { createTheme } from '@uiw/codemirror-themes';
 import { rust } from '@codemirror/lang-rust';
 import { tags } from '@lezer/highlight';
 
-const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
-  const [code, setCode] = useState('');
+const CodeEditor = ({ globalCode, setGlobalCode, setOutputLog, setSaveDialogVisable }) => {
   const editorRef = useRef(null);
-
-  const syncroniseCode = () => {
-    let content = editorRef.current.editor.textContent;
-    setCode(content.substring(3, content.length));
-  }
 
   const handleKeyDown = (event) => {
     const key = event.code;
     if (event.altKey){
       switch (key) {
         case "KeyT": {
-          //syncroniseCode();
-          invoke("compile", { code: code }).then(output => setOutputLog(output));
+          invoke("compile", { code: globalCode }).then(output => setOutputLog(output));
         } break;
       }
     }
     if (event.ctrlKey) {
       switch (key) {
         case "KeyS": {
-          //syncroniseCode();
-          console.log(code)
           setSaveDialogVisable(true);
         } break;
       }
@@ -37,17 +28,11 @@ const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
   }
 
   useEffect(() => {
-    if (updatedCode) {
-      setCode(updatedCode);
-    }
-  }, [updatedCode]);
-
-  useEffect(() => {
     editorRef.current&&editorRef.current.editor.addEventListener('keydown', handleKeyDown);
     return () => {
       editorRef.current&&editorRef.current.editor.removeEventListener('keydown', handleKeyDown);
     };
-  }, [code]);
+  }, [globalCode]);
 
   const rustTheme = createTheme({
     settings: {
@@ -79,16 +64,16 @@ const CodeEditor = ({ updatedCode, setOutputLog, setSaveDialogVisable }) => {
       { tag: tags.operatorKeyword, color: '#61AFEF' }
     ],
   });
-
+  
   return (
     <div className="editorPanel">
       <CodeMirror
         ref={editorRef}
-        value={code}
+        value={globalCode}
         theme={rustTheme}
         extensions={[rust({})]}
         spellCheck='false'
-        onChange={(current) => setCode(current)}
+        onChange={(current) => setGlobalCode(current)}
       />
     </div>
   )
