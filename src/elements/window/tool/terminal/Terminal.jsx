@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import './terminal.css';
 
-function Terminal({ output, setOutputLog }) {
+const Terminal = React.memo(({ output, setOutputLog }) => {
   const [outputWithCommand, setOutputWithCommand] = useState("");
   const contentRef = useRef(null);
   const terminalRef = useRef(null);
@@ -77,6 +77,6 @@ function Terminal({ output, setOutputLog }) {
       </pre>
     </div>
   );
-}
+})
 
 export default Terminal;
