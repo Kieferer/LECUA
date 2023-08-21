@@ -1,6 +1,6 @@
 import React from 'react'
 
-function File({name, path, loadFile}) {
+const File = React.memo(({name, path, loadFile}) => {
   const getIcon = () => {
     if (name.includes(".rs")){
       return './rustLogo.png';
@@ -20,6 +20,6 @@ function File({name, path, loadFile}) {
       {name}
     </div>
   )
-}
+});
 
 export default File
