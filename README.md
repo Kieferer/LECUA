@@ -11,6 +11,7 @@
 * Javascript
 * Vite
 * React
+* Million.js
 
 ## Features
 * **Code Editor:** The tool which makes it possible to modify code with syntax highlighting for better code readability. Handles shortcuts and manages the insertion of code snippets.
@@ -19,7 +20,7 @@
 
 * **Terminal:** It's more like a debug console that displays compile and run-time errors and output of the running code without the ability to handle user input and start its own processes.
 ## Usage
-The application currently runs stable on the Windows platform.
+The application currently supports Windows platform and requires installation of WebView2, NPM, Tauri CLI, Rust and Microsoft Visual Studio C++ Build Tools.
 The project can be started with the ```npm run tauri dev``` command and built with the ```npm run tauri build``` which is not recommended yet due to the Terminal.
 | Shortcut | Action |
 | ------------- |:-------------:|
