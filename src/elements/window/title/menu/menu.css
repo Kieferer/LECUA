@@ -1,0 +1,22 @@
+.menuPanel {
+  width: auto;
+  min-width: 100px;
+  height: max-content;
+  position: absolute;
+  background-color: rgb(70, 70, 70);
+  transform:translate(0, 40px);
+  display: block;
+  border-radius: 5px;
+}
+
+.menuOption {
+  font-weight: 1px;
+  font-size: smaller;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.menuOption:hover {
+  background-color: rgb(40, 40, 40);
+
+}
