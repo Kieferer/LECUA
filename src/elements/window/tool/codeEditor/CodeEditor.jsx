@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import './codeEditor.css'
 import CodeMirror from '@uiw/react-codemirror';

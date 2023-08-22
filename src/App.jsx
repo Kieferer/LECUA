@@ -6,10 +6,10 @@ import CodeEditor from "./elements/window/tool/codeEditor/CodeEditor.jsx";
 import Terminal from "./elements/window/tool/terminal/Terminal";
 import SaveDialog from "./elements/window/dialog/SaveDialog/SaveDialog";
 
-function App() {
+const App = () => {
   const [globalCode, setGlobalCode] = useState('');
   const [filePath, setFilePath] = useState('');
-  const [outputLog, setOutputLog] = useState("");
+  const [outputLog, setOutputLog] = useState('');
   const [isSaveDialogVisible, setSaveDialogVisible] = useState(false);
 
   return (
