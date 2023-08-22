@@ -13,7 +13,6 @@ const Hierarchy = React.memo(({ setGlobalCode, setFilePath }) => {
   }, []);
 
   const loadFile = useCallback((path) => {
-    console.log(path);
     setFilePath(path);
     invoke("load_file", { path: path }).then(data => setGlobalCode(data));
   }, [setFilePath, setGlobalCode]);

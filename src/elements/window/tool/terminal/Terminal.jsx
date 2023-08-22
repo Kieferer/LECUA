@@ -17,7 +17,6 @@ const Terminal = React.memo(({ output, setOutputLog }) => {
     terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
   };
 
-
   const removeEmptyLines = (input) => {
     const lines = input.split("\n");
     let notEmptyLines = [];
