@@ -1,5 +1,5 @@
 use std::cmp;
-use crate::math::clamp;
+
 
 #[tauri::command]
 pub fn insert_cursor_symbol(mut text: String, pos: usize) -> String {
@@ -8,7 +8,7 @@ pub fn insert_cursor_symbol(mut text: String, pos: usize) -> String {
 }
 
 #[tauri::command]
-pub fn insert_text_at_cursor(mut text: String, inserted_text: String, x: usize, y: usize) -> String {
+pub fn insert_text_at_cursor(mut text: String, _inserted_text: String, x: usize, y: usize) -> String {
     text = (x + y).to_string();
     text
 }
@@ -44,7 +44,7 @@ pub fn adjust_cursor_x(text: String, mut x: usize, mut y: usize, direction: i8) 
     println!("{}x:{}y", (x), y);
     let current_row: Option<&str> = text.lines().take(y).collect::<Vec<&str>>().get(0).cloned();
 
-    if let Some(row) = current_row {
+    if let Some(_row) = current_row {
         println!("lefut");
         if direction > 0 {
             if  current_row.unwrap().len() >= (x + 1) {
