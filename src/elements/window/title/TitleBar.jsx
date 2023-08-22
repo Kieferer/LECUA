@@ -13,6 +13,13 @@ const TitleBar = () => {
     titlebar.addEventListener("drag", appWindow.startDragging)
   }, [])
 
+  /*-----------------------MenuContent
+  |  MenuContent is the container which render the options of a menu in Titlebar.
+  |  Template: const menuContentName = [ {label: text, action: function, xPos: `${number}px`} ]
+  |  Action is optional, if its not set, the app going to throw an alert informing about the button
+  |  has been not implemented yet.
+  */
+
   const fileMenuContent = [
     {label: "Open file", xPos: "45px"},
     {label: "Open folder", xPos: "45px"},
