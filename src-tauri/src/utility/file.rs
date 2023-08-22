@@ -75,6 +75,6 @@ fn build_file_system_tree(folder_path: &Path) -> FileSystemNode {
 
 fn get_index_of_dash_line(output: String) -> Option<usize> {
     let lines: Vec<&str> = output.lines().collect();
-    let mut  index = lines.iter().position(|&r| r.contains("----"));
+    let index = lines.iter().position(|&r| r.contains("----"));
     index
 }
