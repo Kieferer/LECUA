@@ -11,7 +11,6 @@ const App = () => {
   const [filePath, setFilePath] = useState('');
   const [outputLog, setOutputLog] = useState('');
   const [isSaveDialogVisible, setSaveDialogVisible] = useState(false);
-
   return (
     <div className="container">
       <TitleBar/>
