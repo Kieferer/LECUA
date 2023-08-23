@@ -56,5 +56,13 @@
         "height": 700
       }
     ]
+  },
+  "updater": {
+    "active": true,
+    "endpoints": [
+      ""
+    ],
+    "dialog": true,
+    "pubkey": ""
   }
 }
