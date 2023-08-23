@@ -43,6 +43,14 @@
         "icons/icon.ico"
       ]
     },
+    "updater": {
+      "active": true,
+      "endpoints": [
+        ""
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNBNUZBQzlGNzRDMTI0MgpSV1JDRWt6M3lmcWxBNEN0YVMwS0VDeXgvZCtaN1NvNnVUQnRXRDkyZ0RQbi9kNUtONzBpOWwxZAo="
+    },
     "security": {
       "csp": null
     },
@@ -56,13 +64,5 @@
         "height": 700
       }
     ]
-  },
-  "updater": {
-    "active": true,
-    "endpoints": [
-      ""
-    ],
-    "dialog": true,
-    "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNBNUZBQzlGNzRDMTI0MgpSV1JDRWt6M3lmcWxBNEN0YVMwS0VDeXgvZCtaN1NvNnVUQnRXRDkyZ0RQbi9kNUtONzBpOWwxZAo="
   }
 }
