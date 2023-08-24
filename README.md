@@ -12,6 +12,12 @@
 * Vite
 * React
 * Million.js
+> LECUA utilizes the [UAI-API](https://github.com/Kieferer/UAIAPI) to perform automatic updates with tauri-updater and GitHub Actions.<br/>
+> I initially developed it specifically for the tauri-updater and have plans to expand its capabilities to also support Electron's autoUpdater.
+### UAI-API Backend
+* C#
+* ASP.NET
+* Azure App Container
 
 ## Features
 * **Code Editor:** The tool which makes it possible to modify code with syntax highlighting for better code readability. Handles shortcuts and manages the insertion of code snippets.
