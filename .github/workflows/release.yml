@@ -1,9 +1,9 @@
 name: Build LECUA and Publish MSI with metadata to UAI-API
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -22,13 +22,13 @@ jobs:
       - name: Delete artifacts
         run: |
           $headers = @{ Authorization = "Bearer $env:GH_TOKEN" }
-          $artifactsUrl = "https://api.github.com/repos/Kieferer/test_github_actions_for_tauri_autoupdater/actions/artifacts"
+          $artifactsUrl = "https://api.github.com/repos/Kieferer/LECUA/actions/artifacts"
           $response = Invoke-RestMethod -Uri $artifactsUrl -Headers $headers
           echo "Found (MSI installer) artifacts: $response.total_count"
           
           foreach ($artifact in $response.artifacts) {
               $artifactId = $artifact.id
-              $artifactDeleteUrl = "https://api.github.com/repos/Kieferer/test_github_actions_for_tauri_autoupdater/actions/artifacts/$artifactId"
+              $artifactDeleteUrl = "https://api.github.com/repos/Kieferer/LECUA/actions/artifacts/$artifactId"
               
               Invoke-RestMethod -Uri $artifactDeleteUrl -Method Delete -Headers $headers
           	  echo "Deleted artifact ID:$artifactId"
@@ -76,7 +76,7 @@ jobs:
 
           $response = Invoke-RestMethod -Headers @{
           	Authorization = "Bearer $env:GH_TOKEN"
-          } -Uri "https://api.github.com/repos/Kieferer/test_github_actions_for_tauri_autoupdater/actions/artifacts"
+          } -Uri "https://api.github.com/repos/Kieferer/LECUA/actions/artifacts"
           $resultObject = $($response.artifacts | Where-Object { $_.name -eq "tauri-msi-installer" } | Select-Object -First 1)
           $env:download_url = $resultObject.archive_download_url
           echo "Tauri MSI installer download link: $env:download_url"
@@ -96,6 +96,3 @@ jobs:
           
           $uri = "https://uai-api.azurewebsites.net/Api/update"
           Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Body ($jsonPayload | ConvertTo-Json)
-
-
-
