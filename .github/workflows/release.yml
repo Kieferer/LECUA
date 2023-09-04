@@ -1,0 +1,101 @@
+name: Build LECUA and Publish MSI with metadata to UAI-API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    env:
+      TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+      TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Delete artifacts
+        run: |
+          $headers = @{ Authorization = "Bearer $env:GH_TOKEN" }
+          $artifactsUrl = "https://api.github.com/repos/Kieferer/test_github_actions_for_tauri_autoupdater/actions/artifacts"
+          $response = Invoke-RestMethod -Uri $artifactsUrl -Headers $headers
+          echo "Found (MSI installer) artifacts: $response.total_count"
+          
+          foreach ($artifact in $response.artifacts) {
+              $artifactId = $artifact.id
+              $artifactDeleteUrl = "https://api.github.com/repos/Kieferer/test_github_actions_for_tauri_autoupdater/actions/artifacts/$artifactId"
+              
+              Invoke-RestMethod -Uri $artifactDeleteUrl -Method Delete -Headers $headers
+          	  echo "Deleted artifact ID:$artifactId"
+          }
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Cache NPM and Cargo dependencies
+        uses: actions/cache@v3
+        id: cache-npm-cargo-dependencies
+        with:
+          path: |
+            **/node_modules
+            **/Cargo.toml
+            **/cargo.lock
+          key: ${{ runner.os }}-npm-cargo-deps-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/Cargo.toml') }}-${{ hashFiles('**/cargo.lock') }}
+
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Tauri project
+        run: npm run tauri build
+
+      - name: Upload MSI artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tauri-msi-installer
+          path: src-tauri\target\release\bundle\msi\*.msi
+
+      - name: Get variables and post data to ASP.net API
+        run: |
+          $msiPath = "src-tauri/target/release/bundle/msi/*.msi.zip.sig"
+          $env:sigContents = Get-Content -Path $msiPath -Raw
+          echo "Tauri bundle signature: $env:sigContents"
+
+          $configPath = "src-tauri/tauri.conf.json"
+          $configContent = Get-Content -Path $configPath -Raw
+          $configJSON = $configContent | ConvertFrom-Json
+          $env:version = $configJSON.package.version
+          echo "Version of LECUA is $env:version based on tauri.conf.json file"
+
+          $response = Invoke-RestMethod -Headers @{
+          	Authorization = "Bearer $env:GH_TOKEN"
+          } -Uri "https://api.github.com/repos/Kieferer/test_github_actions_for_tauri_autoupdater/actions/artifacts"
+          $resultObject = $($response.artifacts | Where-Object { $_.name -eq "tauri-msi-installer" } | Select-Object -First 1)
+          $env:download_url = $resultObject.archive_download_url
+          echo "Tauri MSI installer download link: $env:download_url"
+
+          $jsonPayload = @{
+              name = "lecua"
+              version = "$env:version"
+              notes = "Test update"
+              platforms = @{
+                  "windows-x86_64" = @{
+                      signature = "$env:sigContents"
+                      url = "$env:download_url"
+                  }
+              }
+          }
+          echo $jsonPayload
+          
+          $uri = "https://uai-api.azurewebsites.net/Api/update"
+          Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Body ($jsonPayload | ConvertTo-Json)
+
+
+
