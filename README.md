@@ -34,7 +34,6 @@ The project can be started with the ```npm run tauri dev``` command and built wi
 | Ctrl+S | Save file |
 | F5 | Reload frontend |
 ## Plans
-You can find the tickets since August on [Trello](https://trello.com/invite/b/Ldn05Yre/ATTIaf22268a7218b7ad2540dc975b7b4ff57AA8EECB/lecua).
 * **Graphical Interface Menu Buttons:** Implement functionality of File, Edit, and View buttons to streamline common actions.
 * **Customizable Shortcut System:** Create a shortcut system that allows to change key combinations by the user for common actions.
 * **Java Code Compilation:** Extend support for compiling and running Java code. The code editor would detect in which language the code is written and run it in the appropriate environment.
